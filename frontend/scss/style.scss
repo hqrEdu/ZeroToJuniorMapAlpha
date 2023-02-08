@@ -1,0 +1,73 @@
+@import '../scss/colors';
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+:root {
+  font-family: 'Manrope', sans-serif;
+  font-size: 1.6rem;
+  background-color: $background-green;
+}
+
+.wrapper {
+  margin: 0 auto;
+  width: 100%;
+  max-width: 1200px;
+}
+
+// HEADER //
+
+
+.header {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 35vh;
+
+
+  &__box {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+  }
+
+
+  &__title {
+    color: $main-green;
+    font-size: 1.6rem;
+  }
+
+  &__text {
+    color: white;
+    font-size: .5rem;
+    margin-bottom: 3em;
+
+  }
+
+  .green__bar {
+    position: absolute;
+    bottom: 0;
+    width: 100vw;
+    height: 40px;
+    border-radius: 4px;
+    background-color: $main-green;
+
+    &-text {
+      color: white;
+      font-size: .7rem;
+      text-align: center;
+      margin: .5em;
+    }
+  }
+}
+
+
+
+
+
+
