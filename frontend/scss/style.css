@@ -1,0 +1,56 @@
+*, *::before, *::after {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+:root {
+  font-family: "Manrope", sans-serif;
+  font-size: 1.6rem;
+  background-color: #020E04;
+}
+
+.wrapper {
+  margin: 0 auto;
+  width: 100%;
+  max-width: 1200px;
+}
+
+.header {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 35vh;
+}
+.header__box {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+.header__title {
+  color: #15B52B;
+  font-size: 1.6rem;
+}
+.header__text {
+  color: white;
+  font-size: 0.5rem;
+  margin-bottom: 3em;
+}
+.header .green__bar {
+  position: absolute;
+  bottom: 0;
+  width: 100vw;
+  height: 40px;
+  border-radius: 4px;
+  background-color: #15B52B;
+}
+.header .green__bar-text {
+  color: white;
+  font-size: 0.7rem;
+  text-align: center;
+  margin: 0.5em;
+}
+
+/*# sourceMappingURL=style.css.map */
