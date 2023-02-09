@@ -47,10 +47,71 @@
   background-color: #15B52B;
 }
 .header .green__bar-text {
-  color: white;
+  font-weight: bold;
   font-size: 0.7rem;
   text-align: center;
   margin: 0.5em;
+  color: white;
+}
+
+.main {
+  position: relative;
+}
+.main .joinus {
+  position: relative;
+}
+.main .joinus__bar {
+  position: absolute;
+  bottom: 0;
+  width: 100vw;
+  height: 40px;
+  border-radius: 4px;
+  background-color: #15B52B;
+  margin-bottom: 1em;
+}
+.main .joinus__text {
+  font-weight: bold;
+  font-size: 0.7rem;
+  text-align: center;
+  margin: 0.5em;
+  color: white;
+}
+.main .form {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+.main .form__title {
+  color: #379237;
+  font-size: 0.5rem;
+  margin: 0 0.5em;
+}
+.main .form__title-two {
+  color: #379237;
+  font-size: 0.5rem;
+  margin: 1em 0;
+}
+.main .form__discord-btn {
+  font-size: 0.5rem;
+  border-radius: 0.8em;
+  border: 2px solid #3c47bd;
+  padding: 0.5em 2em;
+  margin-top: 1em;
+  color: white;
+  cursor: pointer;
+  background-color: #5865f2;
+}
+.main .form__discord-input {
+  color: white;
+  border: 2px solid #15B52B;
+  background-color: #379237;
+  padding: 0.5em 6em 0.5em 0.7em;
+  font-size: 0.4rem;
+  text-align: left;
+  font-weight: bold;
+  border-radius: 0.8em;
 }
 
 /*# sourceMappingURL=style.css.map */
