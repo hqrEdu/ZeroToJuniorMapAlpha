@@ -32,7 +32,7 @@ class DatabaseManager:
 
     def get_all(self):
         cursor = self.conn.cursor(cursor_factory=RealDictCursor)
-        query = "SELECT * FROM user_data"
+        query = "SELECT username, city, field FROM user_data"
         cursor.execute(query)
         result = cursor.fetchall()
         return json.dumps(result)
