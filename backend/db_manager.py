@@ -25,10 +25,10 @@ class DatabaseManager:
                 query = "INSERT INTO user_data (username, city) VALUES (%s, %s)"
                 cursor.execute(query, (username, city))
             self.conn.commit()
-            return json.dumps({"[Message]": "User has been inserted successfully."})
+            return (True, "User has been inserted successfully.")
         except psycopg2.errors.UniqueViolation:
             self.conn.rollback()
-            return json.dumps({"[Error]": "This user has already provided their location"})
+            return (False, "This user has already provided their location.")
 
     def get_all(self):
         cursor = self.conn.cursor(cursor_factory=RealDictCursor)
