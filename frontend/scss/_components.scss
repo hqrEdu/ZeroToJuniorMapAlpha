@@ -1,0 +1,24 @@
+
+input[type="radio"].form__frontend-input {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  width: .7rem;
+  height: .7rem;
+  background-color: $contrast-blue;
+  border-radius: 50%;
+  border: 2px solid #333;
+  position: relative;
+}
+
+input[type="radio"].form__backend-input {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  width: .7rem;
+  height: .7rem;
+  background-color: $border-yellow;
+  border-radius: 50%;
+  border: 2px solid #333;
+  position: relative;
+}
