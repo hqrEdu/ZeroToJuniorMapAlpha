@@ -14,3 +14,20 @@
   margin: .5em;
   color: white;
 }
+
+@mixin radioStyle {
+  font-size: .5rem;
+  color: white;
+  font-weight: bold;
+}
+
+@mixin inputStyle {
+  color: white;
+  border: 2px solid $main-green;
+  background-color: $dark-green;
+  padding: .5em 6em .5em .7em;
+  font-size: .4rem;
+  text-align: left;
+  font-weight: bold;
+  border-radius: .8em;
+}

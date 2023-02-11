@@ -1,3 +1,27 @@
+input[type=radio].form__frontend-input {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  width: 0.7rem;
+  height: 0.7rem;
+  background-color: #2192FF;
+  border-radius: 50%;
+  border: 2px solid #333;
+  position: relative;
+}
+
+input[type=radio].form__backend-input {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  width: 0.7rem;
+  height: 0.7rem;
+  background-color: #F0FF42;
+  border-radius: 50%;
+  border: 2px solid #333;
+  position: relative;
+}
+
 *, *::before, *::after {
   box-sizing: border-box;
   padding: 0;
@@ -112,6 +136,54 @@
   text-align: left;
   font-weight: bold;
   border-radius: 0.8em;
+}
+.main .form .formbox-three {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: row;
+  margin: 0.5em 3.6em;
+}
+.main .form__frontend-input {
+  margin-right: 0.5em;
+}
+.main .form__frontend-label {
+  font-size: 0.5rem;
+  color: white;
+  font-weight: bold;
+}
+.main .form__backend-input {
+  margin: 0 0.5em 0 1.5em;
+}
+.main .form__backend-label {
+  font-size: 0.5rem;
+  color: white;
+  font-weight: bold;
+}
+.main .form .formbox-four {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+.main .form__city-input {
+  color: white;
+  border: 2px solid #15B52B;
+  background-color: #379237;
+  padding: 0.5em 6em 0.5em 0.7em;
+  font-size: 0.4rem;
+  text-align: left;
+  font-weight: bold;
+  border-radius: 0.8em;
+}
+.main .form__personal-input {
+  display: inline-block;
+}
+.main .form__personal-label {
+  display: inline-block;
+  margin-left: 1em;
+  font-size: 0.3rem;
+  color: white;
 }
 
 /*# sourceMappingURL=style.css.map */
