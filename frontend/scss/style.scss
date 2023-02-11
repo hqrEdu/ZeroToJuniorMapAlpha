@@ -1,4 +1,5 @@
 @import '../scss/colors';
+@import "../scss/mixins";
 
 *, *::before, *::after {
   box-sizing: border-box;
@@ -50,23 +51,83 @@
   }
 
   .green__bar {
-    position: absolute;
-    bottom: 0;
-    width: 100vw;
-    height: 40px;
-    border-radius: 4px;
-    background-color: $main-green;
+    @include greenBar;
 
     &-text {
-      color: white;
-      font-size: .7rem;
-      text-align: center;
-      margin: .5em;
+      @include barText;
     }
   }
 }
 
 
+// MAIN //
+
+
+.main {
+  position: relative;
+
+  //JOIN US SECTION //
+
+  .joinus {
+    position: relative;
+
+
+    &__bar {
+      @include greenBar;
+      margin-bottom: 1em;
+    }
+
+    &__text {
+      @include barText;
+    }
+  }
+
+  //  FORM SECTION //
+
+  .form {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+
+    &__title {
+      color: $dark-green;
+      font-size: .5rem;
+      margin: 0 .5em;
+    }
+
+    &__title-two {
+      color: $dark-green;
+      font-size: .5rem;
+      margin: 1em 0;
+    }
+
+
+    &__discord-btn {
+      font-size: .5rem;
+      border-radius: .8em;
+      border: 2px solid #3c47bd;
+      padding: .5em 2em;
+      margin-top: 1em;
+      color: white;
+      cursor: pointer;
+      background-color: $discord-purple;
+    }
+
+    &__discord-input {
+      color: white;
+      border: 2px solid $main-green;
+      background-color: $dark-green;
+      padding: .5em 6em .5em .7em;
+      font-size: .4rem;
+      text-align: left;
+      font-weight: bold;
+      border-radius: .8em;
+
+    }
+  }
+}
 
 
 

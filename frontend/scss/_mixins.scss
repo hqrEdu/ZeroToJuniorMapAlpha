@@ -1,0 +1,16 @@
+@mixin greenBar {
+  position: absolute;
+  bottom: 0;
+  width: 100vw;
+  height: 40px;
+  border-radius: 4px;
+  background-color: $main-green;
+}
+
+@mixin barText {
+  font-weight: bold;
+  font-size: .7rem;
+  text-align: center;
+  margin: .5em;
+  color: white;
+}
