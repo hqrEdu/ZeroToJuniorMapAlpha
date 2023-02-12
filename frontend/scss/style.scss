@@ -11,6 +11,8 @@
 
 :root {
   font-family: 'Manrope', sans-serif;
+  height: 100%;
+  width: 100%;
   font-size: 1.6rem;
   background-color: $background-green;
 }
@@ -18,7 +20,7 @@
 .wrapper {
   margin: 0 auto;
   width: 100%;
-  max-width: 1200px;
+  max-width: 1500px;
 }
 
 // HEADER //
@@ -108,9 +110,9 @@
 
     &__discord-btn {
       font-size: .5rem;
-      border-radius: .8em;
+      border-radius: 2em;
       border: 2px solid #3c47bd;
-      padding: .5em 2em;
+      padding: .7em 2em;
       margin-top: 1em;
       color: white;
       cursor: pointer;
@@ -118,7 +120,7 @@
     }
 
     &__discord-input {
-     @include inputStyle;
+      @include inputStyle;
 
     }
 
@@ -158,30 +160,34 @@
 
     &__city-input {
       @include inputStyle;
+
+
     }
 
 
+    &__personal-input {
+      display: inline-block;
+      margin: 2em 0 0 0;
+      cursor: pointer;
 
-&__personal-input {
-  display: inline-block;
-}
+    }
 
     &__personal-label {
       display: inline-block;
-      margin-left: 1em;
+      margin: 0 0 2em 1em;
       font-size: .3rem;
       color: white;
     }
+
+    &__join-btn {
+      cursor: pointer;
+      margin: .5em .2em;
+      padding: .3em 3em;
+      font-size: .7rem;
+      color: white;
+      background-color: $main-green;
+      border: 2px solid $dark-green;
+      border-radius: 2em;
+    }
   }
 }
-
-
-
-
-
-
-
-
-
-
-
