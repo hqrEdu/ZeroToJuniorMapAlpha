@@ -10,6 +10,11 @@ input[type=radio].form__frontend-input {
   position: relative;
 }
 
+input[type=radio].form__frontend-input:focus {
+  background-color: #333;
+  border: none;
+}
+
 input[type=radio].form__backend-input {
   -webkit-appearance: none;
   -moz-appearance: none;
@@ -22,6 +27,10 @@ input[type=radio].form__backend-input {
   position: relative;
 }
 
+input[type=radio].form__backend-input:focus {
+  background-color: #333;
+}
+
 *, *::before, *::after {
   box-sizing: border-box;
   padding: 0;
@@ -30,6 +39,8 @@ input[type=radio].form__backend-input {
 
 :root {
   font-family: "Manrope", sans-serif;
+  height: 100%;
+  width: 100%;
   font-size: 1.6rem;
   background-color: #020E04;
 }
@@ -37,7 +48,7 @@ input[type=radio].form__backend-input {
 .wrapper {
   margin: 0 auto;
   width: 100%;
-  max-width: 1200px;
+  max-width: 1500px;
 }
 
 .header {
@@ -65,7 +76,7 @@ input[type=radio].form__backend-input {
 .header .green__bar {
   position: absolute;
   bottom: 0;
-  width: 100vw;
+  width: 100%;
   height: 40px;
   border-radius: 4px;
   background-color: #15B52B;
@@ -87,7 +98,7 @@ input[type=radio].form__backend-input {
 .main .joinus__bar {
   position: absolute;
   bottom: 0;
-  width: 100vw;
+  width: 100%;
   height: 40px;
   border-radius: 4px;
   background-color: #15B52B;
@@ -119,9 +130,9 @@ input[type=radio].form__backend-input {
 }
 .main .form__discord-btn {
   font-size: 0.5rem;
-  border-radius: 0.8em;
+  border-radius: 2em;
   border: 2px solid #3c47bd;
-  padding: 0.5em 2em;
+  padding: 0.7em 2em;
   margin-top: 1em;
   color: white;
   cursor: pointer;
@@ -129,13 +140,12 @@ input[type=radio].form__backend-input {
 }
 .main .form__discord-input {
   color: white;
-  border: 2px solid #15B52B;
-  background-color: #379237;
-  padding: 0.5em 6em 0.5em 0.7em;
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  background-color: rgba(255, 255, 255, 0.05);
+  padding: 0.9em 5.7em;
   font-size: 0.4rem;
-  text-align: left;
-  font-weight: bold;
-  border-radius: 0.8em;
+  text-align: center;
+  border-radius: 2em;
 }
 .main .form .formbox-three {
   display: flex;
@@ -168,22 +178,33 @@ input[type=radio].form__backend-input {
 }
 .main .form__city-input {
   color: white;
-  border: 2px solid #15B52B;
-  background-color: #379237;
-  padding: 0.5em 6em 0.5em 0.7em;
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  background-color: rgba(255, 255, 255, 0.05);
+  padding: 0.9em 5.7em;
   font-size: 0.4rem;
-  text-align: left;
-  font-weight: bold;
-  border-radius: 0.8em;
+  text-align: center;
+  border-radius: 2em;
 }
 .main .form__personal-input {
   display: inline-block;
+  margin: 2em 0 0 0;
+  cursor: pointer;
 }
 .main .form__personal-label {
   display: inline-block;
-  margin-left: 1em;
+  margin: 0 0 2em 1em;
   font-size: 0.3rem;
   color: white;
+}
+.main .form__join-btn {
+  cursor: pointer;
+  margin: 0.5em 0.2em;
+  padding: 0.3em 3em;
+  font-size: 0.7rem;
+  color: white;
+  background-color: #15B52B;
+  border: 2px solid #379237;
+  border-radius: 2em;
 }
 
 /*# sourceMappingURL=style.css.map */
