@@ -1,5 +1,6 @@
 const input = document.querySelector('.form__discord-input');
-const cityInput = document.querySelector('.form__city-input')
+const cityInput = document.querySelector('.form__city-input');
+const footerYear = document.querySelector('.footer__year');
 const cityText = 'Wpisz swoje miasto...'
 const defaultText = 'Twój nick z Discord';
 
@@ -26,5 +27,10 @@ cityInput.addEventListener('blur', function () {
     }
 })
 
+const handleCurrentYear = () => {
+    const year = new Date().getFullYear()
+    footerYear.innerText = year
+}
+handleCurrentYear()
 
 
