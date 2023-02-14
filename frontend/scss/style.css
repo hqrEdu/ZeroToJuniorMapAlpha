@@ -245,6 +245,7 @@ input[type=radio].form__backend-input:focus {
     display: flex;
     justify-content: center;
     align-items: center;
+    margin-top: 1.3em;
     flex-basis: 40%;
     text-align: center;
   }
