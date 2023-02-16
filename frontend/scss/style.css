@@ -57,7 +57,62 @@ input[type="radio"].form__backend-input:focus {
   height: 500px;
   width: 500px;
 }
+
+.users__list {
+  width: 400px;
+  height: 500px;
+  background-color: #15b52b;
+  margin-left: 102px;
+  border-radius: 15px;
+  position: relative;
+  overflow: auto;
+}
+.usersList__text {
+  font-weight: bold;
+  color: white;
+  font-size: 0.7rem;
+  margin-bottom: 1em;
+  text-align: center;
+  padding-top: 5px;
+}
+.list__btn {
+  display: flex;
+  justify-content: center;
+  column-gap: 10px;
+}
+.backend__btn {
+  padding: 5px 15px 5px 15px;
+  background-color: #f0ff42;
+  font-weight: 600;
+  border-radius: 15px;
+  border-width: 0px;
+}
+.frontend__btn {
+  padding: 5px 15px 5px 15px;
+  background-color: #2192ff;
+  border-radius: 15px;
+  border-width: 0px;
+  color: white;
+  font-weight: 600;
+}
+
+.user__bars {
+  padding: 20px 0px 20px 0px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+.user__bar {
+  background-color: white;
+  width: 300px;
+  height: 70px;
+  border-radius: 10px;
+  display: flex;
+}
 .maps {
+  display: flex;
+  flex-direction: row;
   height: 600px;
   width: 600px;
   padding: 15px;

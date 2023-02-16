@@ -24,23 +24,45 @@ async function initMap() {
   usersWithCord = await codeAddress(usersWithCity);
   markerList = await setMarkers(map, markerList);
 
-  //markers which should be on list - markers on map
+  // function which create list of markers
+  async function createListOfUsers(markerList, markersOnMap) {
+    markersOnMap = [];
 
-  async function changeSizeOfMap(map, markerList, markersOnMap) {
-    await google.maps.event.addListener(map, "bounds_changed", async function () {
-      markersOnMap = [];
-
-      for (let i = 0; i < markerList.length; i++) {
-        if (map.getBounds().contains(markerList[i].getPosition())) {
-          if (markersOnMap.includes(markerList[i])) {
-            continue;
-          } else {
-            markersOnMap.push(markerList[i]);
-          }
+    for (let i = 0; i < markerList.length; i++) {
+      if (map.getBounds().contains(markerList[i].getPosition())) {
+        if (markersOnMap.includes(markerList[i])) {
+          continue;
+        } else {
+          markersOnMap.push(markerList[i]);
         }
       }
-      console.log(markersOnMap);
-      return markersOnMap;
+    }
+    createListOfUsersOnLayout(markersOnMap);
+    return markersOnMap;
+  }
+
+  //function to create list of markers on layout
+
+  async function createListOfUsersOnLayout(markersOnMap) {
+    for (i = 0; i < markersOnMap.length; i++) {
+      if (document.getElementById(markersOnMap[i].title) === null) {
+        bar = document.createElement("div");
+        bar.innerHTML = markersOnMap[i].title;
+        bar.id = markersOnMap[i].title;
+        bar.className = "user__bar";
+        document.getElementsByClassName("user__bars")[0].appendChild(bar);
+      }
+    }
+  }
+
+  //initialization of list
+  createListOfUsers(markerList, markersOnMap);
+  //markers which should be on list after zooming
+  async function changeSizeOfMap(map, markerList, markersOnMap) {
+    await google.maps.event.addListener(map, "bounds_changed", async function () {
+      document.querySelectorAll("div.user__bar").forEach((n) => n.remove());
+      createListOfUsers(markerList, markersOnMap);
+      createListOfUsersOnLayout(markersOnMap);
     });
   }
   changeSizeOfMap(map, markerList, markersOnMap);
