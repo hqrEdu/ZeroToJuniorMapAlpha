@@ -1,3 +1,10 @@
+### macOS ###
+# General
+.DS_Store
+.AppleDouble
+.LSOverride
+
+
 ### Linux ###
 *~
 
@@ -342,8 +349,3 @@ $RECYCLE.BIN/
 # Windows shortcuts
 *.lnk
 
-### macOS ###
-# General
-.DS_Store
-.AppleDouble
-.LSOverride
