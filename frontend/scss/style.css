@@ -147,7 +147,10 @@ input[type="radio"].form__backend-input:focus {
 .header__text {
   color: white;
   font-size: 0.5rem;
-  margin-bottom: 3em;
+  margin-bottom: 5em;
+}
+.header__img {
+  margin-top: 1em;
 }
 .header .green__bar {
   position: absolute;
@@ -297,11 +300,11 @@ input[type="radio"].form__backend-input:focus {
   margin-bottom: 1em;
 }
 .footer__mid {
-  margin-bottom: 1.5em;
+  margin-bottom: 0.5em;
 }
 .footer__img {
-  padding-left: 3em;
-  margin-bottom: 1.5em;
+  padding-left: 4em;
+  margin-bottom: 0.5em;
 }
 
 @media only screen and (min-width: 768px) {
@@ -327,6 +330,12 @@ input[type="radio"].form__backend-input:focus {
   }
   .footer__right {
     margin-top: 1em;
+  }
+  .footer__text {
+    display: inline-block;
+  }
+  .footer__img {
+    padding-right: 1em;
   }
 }
 

@@ -50,8 +50,12 @@
   &__text {
     color: white;
     font-size: .5rem;
-    margin-bottom: 3em;
+    margin-bottom: 5em;
 
+  }
+
+  &__img {
+    margin-top: 1em;
   }
 
   .green__bar {
@@ -211,12 +215,12 @@
   }
 
   &__mid {
-    margin-bottom: 1.5em;
+    margin-bottom: .5em;
   }
 
   &__img {
-    padding-left: 3em;
-    margin-bottom: 1.5em;
+    padding-left: 4em;
+    margin-bottom: .5em;
   }
 }
 
@@ -230,7 +234,7 @@
     border-top: 1px solid $form-color;
     font-size: .5rem;
     height: 5rem;
-    background-color: $footer-dark
+    background-color: $footer-dark;
   }
 
   .footer__left,
@@ -246,5 +250,16 @@
 
   .footer__right {
     margin-top: 1em;
+  }
+
+  .footer__text {
+
+    display: inline-block;
+
+
+  }
+
+  .footer__img {
+    padding-right: 1em;
   }
 }
