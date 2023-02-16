@@ -1,37 +1,39 @@
-input[type=radio].form__frontend-input {
+input[type="radio"].form__frontend-input {
   -webkit-appearance: none;
   -moz-appearance: none;
   appearance: none;
   width: 0.7rem;
   height: 0.7rem;
-  background-color: #2192FF;
+  background-color: #2192ff;
   border-radius: 50%;
   border: 2px solid #333;
   position: relative;
 }
 
-input[type=radio].form__frontend-input:focus {
+input[type="radio"].form__frontend-input:focus {
   background-color: #333;
   border: none;
 }
 
-input[type=radio].form__backend-input {
+input[type="radio"].form__backend-input {
   -webkit-appearance: none;
   -moz-appearance: none;
   appearance: none;
   width: 0.7rem;
   height: 0.7rem;
-  background-color: #F0FF42;
+  background-color: #f0ff42;
   border-radius: 50%;
   border: 2px solid #333;
   position: relative;
 }
 
-input[type=radio].form__backend-input:focus {
+input[type="radio"].form__backend-input:focus {
   background-color: #333;
 }
 
-*, *::before, *::after {
+*,
+*::before,
+*::after {
   box-sizing: border-box;
   padding: 0;
   margin: 0;
@@ -42,15 +44,25 @@ input[type=radio].form__backend-input:focus {
   height: 100%;
   width: 100%;
   font-size: 1.6rem;
-  background-color: #020E04;
+  background-color: #020e04;
 }
 
 .wrapper {
   margin: 0 auto;
   width: 100%;
+  height: 100%;
   max-width: 1500px;
 }
-
+#map {
+  height: 500px;
+  width: 500px;
+}
+.maps {
+  height: 600px;
+  width: 600px;
+  padding: 15px;
+  padding-left: 100px;
+}
 .header {
   position: relative;
   display: flex;
@@ -65,7 +77,7 @@ input[type=radio].form__backend-input:focus {
   flex-direction: column;
 }
 .header__title {
-  color: #15B52B;
+  color: #15b52b;
   font-size: 1.6rem;
 }
 .header__text {
@@ -79,7 +91,7 @@ input[type=radio].form__backend-input:focus {
   width: 100%;
   height: 40px;
   border-radius: 4px;
-  background-color: #15B52B;
+  background-color: #15b52b;
 }
 .header .green__bar-text {
   font-weight: bold;
@@ -101,7 +113,7 @@ input[type=radio].form__backend-input:focus {
   width: 100%;
   height: 40px;
   border-radius: 4px;
-  background-color: #15B52B;
+  background-color: #15b52b;
   margin-bottom: 1em;
 }
 .main .joinus__text {
@@ -200,7 +212,7 @@ input[type=radio].form__backend-input:focus {
   padding: 0.3em 3em;
   font-size: 0.7rem;
   color: white;
-  background-color: #15B52B;
+  background-color: #15b52b;
   border: 2px solid #379237;
   border-radius: 2em;
 }
@@ -215,7 +227,7 @@ input[type=radio].form__backend-input:focus {
   padding: 1.5em 1em;
   color: white;
   border-top: 1px solid rgba(255, 255, 255, 0.05);
-  background-color: #09110A;
+  background-color: #09110a;
 }
 .footer__left {
   margin-bottom: 1em;
@@ -237,7 +249,7 @@ input[type=radio].form__backend-input:focus {
     border-top: 1px solid rgba(255, 255, 255, 0.05);
     font-size: 0.5rem;
     height: 5rem;
-    background-color: #09110A;
+    background-color: #09110a;
   }
   .footer__left,
   .footer__mid,
