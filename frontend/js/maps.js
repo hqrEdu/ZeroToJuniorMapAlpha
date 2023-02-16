@@ -7,89 +7,86 @@ let usersWithCity = [
   ["#Maciek2918", "Rybnik", "fe"],
 ];
 
-let usersWithCord = [];
-let markerList = [];
-let markersOnMap = [];
-
 async function initMap() {
   geocoder = new google.maps.Geocoder();
   const map = new google.maps.Map(document.getElementById("map"), {
     zoom: 8,
     center: { lat: 52, lng: 21 },
   });
-
   usersWithCord = await codeAddress(usersWithCity);
-  markerList = await setMarkers(map, markerList);
+  //return all markers
+  await setMarkers(map);
+  //return all users on Map
+  usersInBounds = await createListOfUsersInBounds(map);
 
-  // function which create list of markers
-  async function createListOfUsers(markerList, markersOnMap) {
-    markersOnMap = [];
+  //create divs with users
+  await createListOfUsersOnLayout(usersInBounds);
 
-    for (let i = 0; i < markerList.length; i++) {
-      if (map.getBounds().contains(markerList[i].getPosition())) {
-        if (markersOnMap.includes(markerList[i])) {
-          continue;
-        } else {
-          markersOnMap.push(markerList[i]);
-        }
-      }
-    }
-    createListOfUsersOnLayout(markersOnMap);
-    return markersOnMap;
-  }
-
-  //function to create list of markers on layout
-  async function createListOfUsersOnLayout(markersOnMap) {
-    //check filtering buttons
-    if (be === true) {
-      const markersOnMapAfterFiltering = Object.values(markersOnMap).filter((bar) => bar.stack.includes("be"));
-      markersOnMap = markersOnMapAfterFiltering;
-    } else if (fe === true) {
-      const markersOnMapAfterFiltering = Object.values(markersOnMap).filter((bar) => bar.stack.includes("fe"));
-      markersOnMap = markersOnMapAfterFiltering;
-    }
-    //create divs with data
-    for (i = 0; i < markersOnMap.length; i++) {
-      if (document.getElementById(markersOnMap[i].title) === null) {
-        //create an element
-        bar = document.createElement("div");
-        bar.id = markersOnMap[i].stack + markersOnMap[i].title;
-        bar.className = "user__bar";
-        document.getElementsByClassName("user__bars")[0].appendChild(bar);
-        //create elements inside
-        let img = document.createElement("img");
-        img.setAttribute("src", "img/discord.png");
-        img.className = "discord__img";
-        img.style.border = markersOnMap[i].icon === "img/blue-pin.png" ? "3px solid #2192ff;" : "3px solid #f0ff42";
-        markersOnMap[i].icon === "img/blue-pin.png" ? "3px solid red" : "3px solid green";
-        document.getElementsByClassName("user__bar")[i].appendChild(img);
-        let name = document.createElement("p");
-
-        let nameText = document.createTextNode(markersOnMap[i].title);
-        name.appendChild(nameText);
-        document.getElementsByClassName("user__bar")[i].appendChild(name);
-        let city = document.createElement("p");
-        city.style.fontWeight = "600";
-        let cityText = document.createTextNode(markersOnMap[i].city);
-        city.appendChild(cityText);
-        document.getElementsByClassName("user__bar")[i].appendChild(city);
-      }
-    }
-  }
-
-  //initialization of list
-  createListOfUsers(markerList, markersOnMap);
-  //markers which should be on list after zooming
-  async function changeSizeOfMap(map, markerList, markersOnMap) {
-    await google.maps.event.addListener(map, "bounds_changed", async function () {
-      document.querySelectorAll("div.user__bar").forEach((n) => n.remove());
-      createListOfUsers(markerList, markersOnMap);
-      createListOfUsersOnLayout(markersOnMap);
-    });
-  }
-  changeSizeOfMap(map, markerList, markersOnMap);
+  //change size of map and create new list
+  await changeSizeOfMap(map);
 }
 
+// function which create list of markers
+async function createListOfUsersInBounds(map) {
+  let allMarkers = await setMarkers(map);
+  usersInBounds = [];
+  for (let i = 0; i < allMarkers.length; i++) {
+    if (map.getBounds().contains(allMarkers[i].getPosition())) {
+      if (usersInBounds.includes(allMarkers[i])) {
+        continue;
+      } else {
+        usersInBounds.push(allMarkers[i]);
+      }
+    }
+  }
+  return usersInBounds;
+}
+
+//function to create list of markers on layout
+async function createListOfUsersOnLayout(usersOnMap) {
+  //check filtering buttons
+  if (be === true) {
+    const markersOnMapAfterFiltering = Object.values(usersOnMap).filter((bar) => bar.stack.includes("be"));
+    usersOnMap = markersOnMapAfterFiltering;
+  } else if (fe === true) {
+    const markersOnMapAfterFiltering = Object.values(usersOnMap).filter((bar) => bar.stack.includes("fe"));
+    usersOnMap = markersOnMapAfterFiltering;
+  }
+  //create divs with data
+  for (i = 0; i < usersOnMap.length; i++) {
+    if (document.getElementById(usersOnMap[i].title) === null) {
+      //create an element
+      bar = document.createElement("div");
+      bar.id = usersOnMap[i].stack + usersOnMap[i].title;
+      bar.className = "user__bar";
+      document.getElementsByClassName("user__bars")[0].appendChild(bar);
+      //create elements inside
+      let img = document.createElement("img");
+      img.setAttribute("src", "img/discord.png");
+      img.className = "discord__img";
+      img.style.border = usersOnMap[i].icon === "img/blue-pin.png" ? "3px solid #2192ff;" : "3px solid #f0ff42";
+      usersOnMap[i].icon === "img/blue-pin.png" ? "3px solid red" : "3px solid green";
+      document.getElementsByClassName("user__bar")[i].appendChild(img);
+      let name = document.createElement("p");
+
+      let nameText = document.createTextNode(usersOnMap[i].title);
+      name.appendChild(nameText);
+      document.getElementsByClassName("user__bar")[i].appendChild(name);
+      let city = document.createElement("p");
+      city.style.fontWeight = "600";
+      let cityText = document.createTextNode(usersOnMap[i].city);
+      city.appendChild(cityText);
+      document.getElementsByClassName("user__bar")[i].appendChild(city);
+    }
+  }
+}
+async function changeSizeOfMap(map) {
+  await google.maps.event.addListener(map, "bounds_changed", async function () {
+    document.querySelectorAll("div.user__bar").forEach((n) => n.remove());
+    await createListOfUsersInBounds(map);
+    await createListOfUsersOnLayout(usersInBounds);
+  });
+}
 //change city to lat and lang
 async function codeAddress(addressesToCode) {
   for (let i = 0; i < addressesToCode.length; i++) {
@@ -111,11 +108,12 @@ async function codeAddress(addressesToCode) {
   return addressesToCode;
 }
 
-async function setMarkers(map, markerList) {
+async function setMarkers(map) {
   const shape = {
     coords: [1, 1, 1, 20, 18, 20, 18, 1],
     type: "poly",
   };
+  let allMarkers = [];
 
   for (let i = 0; i < usersWithCord.length; i++) {
     const user = usersWithCord[i];
@@ -130,7 +128,7 @@ async function setMarkers(map, markerList) {
       stack: user[4],
     });
 
-    markerList.push(marker);
+    allMarkers.push(marker);
 
     const infowindow = new google.maps.InfoWindow({
       content: user[0],
@@ -142,7 +140,7 @@ async function setMarkers(map, markerList) {
       });
     });
   }
-  return markerList;
+  return allMarkers;
 }
 
 //filtering list by buttons
@@ -150,10 +148,10 @@ let be = false;
 let fe = false;
 
 function activeClassForBtn(btn) {
-  if (be === true) {
+  if (be) {
     btn = document.getElementById("be");
     btn.style.border = "2px solid red";
-  } else if (fe === true) {
+  } else if (fe) {
     btn = document.getElementById("fe");
     btn.style.border = "2px solid red";
   } else {
@@ -163,7 +161,6 @@ function activeClassForBtn(btn) {
     btn.style.border = "";
   }
 }
-
 async function listFiltering(filter) {
   if (filter === "be") {
     be = !be;
