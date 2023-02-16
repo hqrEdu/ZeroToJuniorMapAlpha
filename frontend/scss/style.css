@@ -109,7 +109,16 @@ input[type="radio"].form__backend-input:focus {
   height: 70px;
   border-radius: 10px;
   display: flex;
+  flex-direction: row;
+  font-size: small;
+  justify-content: space-around;
+  align-items: center;
 }
+.discord__img {
+  border-radius: 50%;
+  margin: 10px;
+}
+
 .maps {
   display: flex;
   flex-direction: row;

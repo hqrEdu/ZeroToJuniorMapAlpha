@@ -46,11 +46,28 @@ async function initMap() {
   async function createListOfUsersOnLayout(markersOnMap) {
     for (i = 0; i < markersOnMap.length; i++) {
       if (document.getElementById(markersOnMap[i].title) === null) {
+        //create an element
         bar = document.createElement("div");
-        bar.innerHTML = markersOnMap[i].title;
         bar.id = markersOnMap[i].title;
         bar.className = "user__bar";
         document.getElementsByClassName("user__bars")[0].appendChild(bar);
+        //create elements inside
+        let img = document.createElement("img");
+        img.setAttribute("src", "img/discord.png");
+        img.className = "discord__img";
+        img.style.border = markersOnMap[i].icon === "img/blue-pin.png" ? "3px solid #2192ff;" : "3px solid #f0ff42";
+        markersOnMap[i].icon === "img/blue-pin.png" ? "3px solid red" : "3px solid green";
+        document.getElementsByClassName("user__bar")[i].appendChild(img);
+        let name = document.createElement("p");
+
+        let nameText = document.createTextNode(markersOnMap[i].title);
+        name.appendChild(nameText);
+        document.getElementsByClassName("user__bar")[i].appendChild(name);
+        let city = document.createElement("p");
+        city.style.fontWeight = "600";
+        let cityText = document.createTextNode(markersOnMap[i].city);
+        city.appendChild(cityText);
+        document.getElementsByClassName("user__bar")[i].appendChild(city);
       }
     }
   }
