@@ -7,15 +7,12 @@ let usersWithCity = [
   ["#Maciek2918", "Rybnik", "fe"],
 ];
 
-let geocoder;
-let map;
 let usersWithCord = [];
 let markerList = [];
 let markersOnMap = [];
 
 async function initMap() {
   geocoder = new google.maps.Geocoder();
-  let latlng = new google.maps.LatLng(52, 31);
   const map = new google.maps.Map(document.getElementById("map"), {
     zoom: 8,
     center: { lat: 52, lng: 21 },
@@ -43,6 +40,15 @@ async function initMap() {
 
   //function to create list of markers on layout
   async function createListOfUsersOnLayout(markersOnMap) {
+    //check filtering buttons
+    if (be === true) {
+      const markersOnMapAfterFiltering = Object.values(markersOnMap).filter((bar) => bar.stack.includes("be"));
+      markersOnMap = markersOnMapAfterFiltering;
+    } else if (fe === true) {
+      const markersOnMapAfterFiltering = Object.values(markersOnMap).filter((bar) => bar.stack.includes("fe"));
+      markersOnMap = markersOnMapAfterFiltering;
+    }
+    //create divs with data
     for (i = 0; i < markersOnMap.length; i++) {
       if (document.getElementById(markersOnMap[i].title) === null) {
         //create an element
@@ -139,16 +145,15 @@ async function setMarkers(map, markerList) {
   return markerList;
 }
 
-//sorting list by buttons
-async function listFiltering(filter) {
-  let bars = document.querySelectorAll("div.user__bar");
-  const result = Object.values(bars).filter((bar) => !bar.id.includes(filter));
-  console.log(result);
-  for (let i = 0; i < result.length; i++) {
-    console.log(result[i].id);
-    let el = document.getElementById(result[i].id);
-    el.remove();
-  }
+//filtering list by buttons
+let be = false;
+let fe = false;
 
-  window.initMap = initMap;
+async function listFiltering(filter) {
+  if (filter === "be") {
+    be = !be;
+  } else {
+    fe = !fe;
+  }
 }
+window.initMap = initMap;
