@@ -149,11 +149,27 @@ async function setMarkers(map, markerList) {
 let be = false;
 let fe = false;
 
+function activeClassForBtn(btn) {
+  if (be === true) {
+    btn = document.getElementById("be");
+    btn.style.border = "2px solid red";
+  } else if (fe === true) {
+    btn = document.getElementById("fe");
+    btn.style.border = "2px solid red";
+  } else {
+    btn = document.getElementById("be");
+    btn.style.border = "";
+    btn = document.getElementById("fe");
+    btn.style.border = "";
+  }
+}
+
 async function listFiltering(filter) {
   if (filter === "be") {
     be = !be;
-  } else {
+  } else if (filter === "fe") {
     fe = !fe;
   }
+  activeClassForBtn(filter);
 }
 window.initMap = initMap;
