@@ -1,80 +1,91 @@
 <!DOCTYPE html>
 <html lang="pl">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Zero to Junior Users Map</title>
-    <link rel="stylesheet" href="./scss/style.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;700&display=swap" rel="stylesheet">
-
-</head>
-<body>
-
-<header class="header">
-    <div class="wrapper">
+    <link rel="stylesheet" href="./scss/style.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;700&display=swap" rel="stylesheet" />
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDNiFB4QmLhSPq1fZWOdgI41vBBYeRhJbE&callback=initMap&v=weekly" defer></script>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
+  </head>
+  <body>
+    <header class="header">
+      <div class="wrapper">
         <div class="header__box">
+
             <img src="./img/junior-logo.svg" alt="zero to junior logo" class="header__img">
             <h1 class="header__title">Zero to Junior</h1>
             <p class="header__text">Od zera do Twojej pierwszej pracy w IT</p>
         </div>
         <div class="green__bar">
-            <p class="green__bar-text">Poznaj programistów z Twojej okolicy!</p>
+          <p class="green__bar-text">Poznaj programistów z Twojej okolicy!</p>
         </div>
-    </div>
-</header>
-<main class="main">
-    <section class="map">
+      </div>
+    </header>
+    <main class="main">
+      <section class="maps">
         <div class="wrapper">
-            <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+          <div id="map">
+            <script src="js/maps.js"></script>
+          </div>
         </div>
-    </section>
-
-
-    <section class="joinus">
-        <div class=„wrapper”>
-            <div class="joinus__bar">
-                <p class="joinus__text">Daj się poznać! Dołącz do naszej listy!</p>
-            </div>
-        </div>
-    </section>
-
-    <section class="form">
         <div class="wrapper">
-            <div class="form formbox">
-                <h2 class="form__title">Wypełnij formularz i dołącz do list programistów!</h2>
-                <button class="form__discord-btn">Dołącz przez konto DISCORD</button>
+          <div class="users__list">
+            <p class="usersList__text">Programiści w Twojej okolicy</p>
+            <div class="list__btn">
+              <button class="backend__btn" id="be" onclick="listFiltering('be')">BACKEND</button>
+              <button class="frontend__btn" id="fe" onclick="listFiltering('fe')">FRONTEND</button>
             </div>
-
-
-            <div class="form formbox-two">
-                <h2 class="form__title-two">lub wpisz się bezpośrednio do naszej mapy!</h2>
-                <input type="text" name="discord" value="Twój nick z Discord" class="form__discord-input">
-            </div>
-
-
-            <div class="form formbox-three">
-                <input type="radio" class="form__frontend-input" name="frontend" value="frontend" checked>
-                <label class="form__frontend-label" for="frontend">Frontend</label>
-
-                <input type="radio" class="form__backend-input" name="backend" value="backend" checked>
-                <label class="form__backend-label" for="backend">Backend</label>
-            </div>
-
-            <div class="form formbox-four">
-                <input type="text" name="city" value="Wpisz swoje miasto..." class="form__city-input">
-
-                <div class="personal__box">
-                    <input type="checkbox" name="personal" id="checkbox" class="form__personal-input">
-                    <label class="form__personal-label" for="checkbox">Zgoda na przetwarzanie danych osobowych</label>
-                </div>
-                <button class="form__join-btn">Dołączam!</button>
-            </div>
+            <div class="user__bars" id="user__bars"></div>
+          </div>
         </div>
-    </section>
-</main>
+      </section>
+
+      <section class="joinus">
+        <div class="„wrapper”">
+          <div class="joinus__bar">
+            <p class="joinus__text">Daj się poznać! Dołącz do naszej listy!</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="form">
+        <div class="wrapper">
+          <div class="form formbox">
+            <h2 class="form__title">Wypełnij formularz i dołącz do list programistów!</h2>
+            <button class="form__discord-btn">Dołącz przez konto DISCORD</button>
+          </div>
+
+          <div class="form formbox-two">
+            <h2 class="form__title-two">lub wpisz się bezpośrednio do naszej mapy!</h2>
+            <input type="text" name="discord" value="Twój nick z Discord" class="form__discord-input" />
+          </div>
+
+          <div class="form formbox-three">
+            <input type="radio" class="form__frontend-input" name="frontend" value="frontend" checked />
+            <label class="form__frontend-label" for="frontend">Frontend</label>
+
+            <input type="radio" class="form__backend-input" name="backend" value="backend" checked />
+            <label class="form__backend-label" for="backend">Backend</label>
+          </div>
+
+          <div class="form formbox-four">
+            <input type="text" name="city" value="Wpisz swoje miasto..." class="form__city-input" />
+
+            <div class="personal__box">
+              <input type="checkbox" name="personal" id="checkbox" class="form__personal-input" />
+              <label class="form__personal-label" for="checkbox">Zgoda na przetwarzanie danych osobowych</label>
+            </div>
+            <button class="form__join-btn">Dołączam!</button>
+          </div>
+        </div>
+      </section>
+    </main>
+
 
 <footer class="footer">
     <p class="footer__left">&copy <span class="footer__year"></span>&nbsp; EMMSIK.EDU Sp.z o.o.</p>
@@ -82,8 +93,8 @@
     <div class="footer__right">
         <img src="img/junior.svg" alt="zero to junior logo" class="footer__img">
         <p class="footer__text">Zero To Junior Community</p>
-    </div>
-</footer>
-<script src="./js/script.js"></script>
-</body>
+      </div>
+    </footer>
+    <script src="./js/script.js"></script>
+  </body>
 </html>
