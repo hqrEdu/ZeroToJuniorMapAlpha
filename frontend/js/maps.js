@@ -42,13 +42,12 @@ async function initMap() {
   }
 
   //function to create list of markers on layout
-
   async function createListOfUsersOnLayout(markersOnMap) {
     for (i = 0; i < markersOnMap.length; i++) {
       if (document.getElementById(markersOnMap[i].title) === null) {
         //create an element
         bar = document.createElement("div");
-        bar.id = markersOnMap[i].title;
+        bar.id = markersOnMap[i].stack + markersOnMap[i].title;
         bar.className = "user__bar";
         document.getElementsByClassName("user__bars")[0].appendChild(bar);
         //create elements inside
@@ -122,6 +121,7 @@ async function setMarkers(map, markerList) {
       shape: shape,
       title: user[0],
       city: user[3],
+      stack: user[4],
     });
 
     markerList.push(marker);
@@ -139,4 +139,16 @@ async function setMarkers(map, markerList) {
   return markerList;
 }
 
-window.initMap = initMap;
+//sorting list by buttons
+async function listFiltering(filter) {
+  let bars = document.querySelectorAll("div.user__bar");
+  const result = Object.values(bars).filter((bar) => !bar.id.includes(filter));
+  console.log(result);
+  for (let i = 0; i < result.length; i++) {
+    console.log(result[i].id);
+    let el = document.getElementById(result[i].id);
+    el.remove();
+  }
+
+  window.initMap = initMap;
+}
