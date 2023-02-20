@@ -16,6 +16,7 @@ async function initMap() {
   usersWithCord = await codeAddress(usersWithCity);
   //return all markers
   await setMarkers(map);
+
   //return all users on Map
   usersInBounds = await createListOfUsersInBounds(map);
 
@@ -39,42 +40,43 @@ async function createListOfUsersInBounds(map) {
       }
     }
   }
+
   return usersInBounds;
 }
 
 //function to create list of markers on layout
-async function createListOfUsersOnLayout(usersOnMap) {
+async function createListOfUsersOnLayout(usersInBounds) {
   //check filtering buttons
   if (be === true) {
-    const markersOnMapAfterFiltering = Object.values(usersOnMap).filter((bar) => bar.stack.includes("be"));
-    usersOnMap = markersOnMapAfterFiltering;
+    const markersOnMapAfterFiltering = Object.values(usersInBounds).filter((bar) => bar.stack.includes("be"));
+    usersInBounds = markersOnMapAfterFiltering;
   } else if (fe === true) {
-    const markersOnMapAfterFiltering = Object.values(usersOnMap).filter((bar) => bar.stack.includes("fe"));
-    usersOnMap = markersOnMapAfterFiltering;
+    const markersOnMapAfterFiltering = Object.values(usersInBounds).filter((bar) => bar.stack.includes("fe"));
+    usersInBounds = markersOnMapAfterFiltering;
   }
   //create divs with data
-  for (i = 0; i < usersOnMap.length; i++) {
-    if (document.getElementById(usersOnMap[i].title) === null) {
+  for (i = 0; i < usersInBounds.length; i++) {
+    if (document.getElementById(usersInBounds[i].title) === null) {
       //create an element
       bar = document.createElement("div");
-      bar.id = usersOnMap[i].stack + usersOnMap[i].title;
+      bar.id = usersInBounds[i].stack + usersInBounds[i].title;
       bar.className = "user__bar";
       document.getElementsByClassName("user__bars")[0].appendChild(bar);
       //create elements inside
       let img = document.createElement("img");
       img.setAttribute("src", "img/discord.png");
       img.className = "discord__img";
-      img.style.border = usersOnMap[i].icon === "img/blue-pin.png" ? "3px solid #2192ff;" : "3px solid #f0ff42";
-      usersOnMap[i].icon === "img/blue-pin.png" ? "3px solid red" : "3px solid green";
+      img.style.border = usersInBounds[i].icon === "img/blue-pin.png" ? "3px solid #2192ff;" : "3px solid #f0ff42";
+      usersInBounds[i].icon === "img/blue-pin.png" ? "3px solid red" : "3px solid green";
       document.getElementsByClassName("user__bar")[i].appendChild(img);
       let name = document.createElement("p");
 
-      let nameText = document.createTextNode(usersOnMap[i].title);
+      let nameText = document.createTextNode(usersInBounds[i].title);
       name.appendChild(nameText);
       document.getElementsByClassName("user__bar")[i].appendChild(name);
       let city = document.createElement("p");
       city.style.fontWeight = "600";
-      let cityText = document.createTextNode(usersOnMap[i].city);
+      let cityText = document.createTextNode(usersInBounds[i].city);
       city.appendChild(cityText);
       document.getElementsByClassName("user__bar")[i].appendChild(city);
     }
@@ -94,8 +96,8 @@ async function codeAddress(addressesToCode) {
     let address = user[1];
     await geocoder.geocode({ address: address }, async function (results, status) {
       if (status == "OK") {
-        lat = (results[0].geometry.bounds.Ya.lo + results[0].geometry.bounds.Ya.lo) / 2;
-        lng = (results[0].geometry.bounds.Ma.lo + results[0].geometry.bounds.Ma.hi) / 2;
+        lat = (results[0].geometry.bounds.Ua.lo + results[0].geometry.bounds.Ua.hi) / 2;
+        lng = (results[0].geometry.bounds.Ia.lo + results[0].geometry.bounds.Ia.hi) / 2;
         user.splice(1, 0, lat);
         user.splice(2, 0, lng);
         return addressesToCode;
@@ -117,7 +119,6 @@ async function setMarkers(map) {
 
   for (let i = 0; i < usersWithCord.length; i++) {
     const user = usersWithCord[i];
-
     let marker = new google.maps.Marker({
       position: { lat: user[1], lng: user[2] },
       map,
