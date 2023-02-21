@@ -70,4 +70,4 @@ class DatabaseManager:
             self.cur.execute(query, (city_name, latitude, longitude))
             self.conn.commit()
 
-db = DatabaseManager("z2j_map", "postgres", "superuser", "localhost", 5432)
+
