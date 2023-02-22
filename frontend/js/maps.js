@@ -31,7 +31,6 @@ async function initMap() {
 async function createListOfUsersInBounds(map) {
   let allMarkers = await setMarkers(map);
   usersInBounds = [];
-  // for (let i = 0; i < allMarkers.length; i++) {
 
   allMarkers.map((marker) => {
     if (map.getBounds().contains(marker.getPosition())) {
@@ -128,8 +127,7 @@ async function setMarkers(map) {
   };
   let allMarkers = [];
 
-  for (let i = 0; i < usersWithCord.length; i++) {
-    const user = usersWithCord[i];
+  usersWithCord.map((user) => {
     let marker = new google.maps.Marker({
       position: { lat: user[1], lng: user[2] },
       map,
@@ -139,7 +137,6 @@ async function setMarkers(map) {
       city: user[3],
       stack: user[4],
     });
-
     allMarkers.push(marker);
 
     const infowindow = new google.maps.InfoWindow({
@@ -151,7 +148,7 @@ async function setMarkers(map) {
         map,
       });
     });
-  }
+  });
   return allMarkers;
 }
 
