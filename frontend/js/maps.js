@@ -7,13 +7,19 @@ let usersWithCity = [
   ["#Maciek2918", "Rybnik", "fe"],
 ];
 
+var request = new XMLHttpRequest();
+request.open("GET", "./js/dummyData.json", false);
+request.send(null);
+var my_JSON_object = JSON.parse(request.responseText);
+console.log(my_JSON_object);
+
 async function initMap() {
   geocoder = new google.maps.Geocoder();
   const map = new google.maps.Map(document.getElementById("map"), {
     zoom: 8,
     center: { lat: 52, lng: 21 },
   });
-  usersWithCord = await codeAddress(usersWithCity);
+  usersWithCord = await codeAddress(my_JSON_object);
   //return all markers
   await setMarkers(map);
 
@@ -95,7 +101,7 @@ async function createListOfUsersOnLayout(usersInBounds) {
 async function changeSizeOfMap(map) {
   await google.maps.event.addListener(map, "bounds_changed", async function () {
     document.querySelectorAll("div.user__bar").forEach((n) => n.remove());
-    await createListOfUsersInBounds(map);
+    usersInBounds = await createListOfUsersInBounds(map);
     await createListOfUsersOnLayout(usersInBounds);
   });
 }
@@ -103,13 +109,17 @@ async function changeSizeOfMap(map) {
 async function codeAddress(addressesToCode) {
   for (let i = 0; i < addressesToCode.length; i++) {
     let user = addressesToCode[i];
-    let address = user[1];
+    console.log(user.city);
+    let address = user.city;
     await geocoder.geocode({ address: address }, async function (results, status) {
       if (status == "OK") {
         lat = (results[0].geometry.bounds.Ua.lo + results[0].geometry.bounds.Ua.hi) / 2;
         lng = (results[0].geometry.bounds.Ia.lo + results[0].geometry.bounds.Ia.hi) / 2;
-        user.splice(1, 0, lat);
-        user.splice(2, 0, lng);
+        // user.splice(1, 0, lat);
+        user.lat = lat;
+        user.lng = lng;
+        console.log(user);
+        // user.splice(2, 0, lng);
         return addressesToCode;
       } else {
         alert("Geocode was not successful for the following reason: " + status);
@@ -129,18 +139,18 @@ async function setMarkers(map) {
 
   usersWithCord.map((user) => {
     let marker = new google.maps.Marker({
-      position: { lat: user[1], lng: user[2] },
+      position: { lat: user.lat, lng: user.lng },
       map,
-      icon: user[4] === "be" ? "img/yellow-pin.png" : "img/blue-pin.png",
+      icon: user.stack === "be" ? "img/yellow-pin.png" : "img/blue-pin.png",
       shape: shape,
-      title: user[0],
-      city: user[3],
-      stack: user[4],
+      title: user.discord,
+      city: user.city,
+      stack: user.stack,
     });
     allMarkers.push(marker);
 
     const infowindow = new google.maps.InfoWindow({
-      content: user[0],
+      content: user.discord,
     });
     marker.addListener("click", () => {
       infowindow.open({
