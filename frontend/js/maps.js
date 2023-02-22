@@ -31,17 +31,28 @@ async function initMap() {
 async function createListOfUsersInBounds(map) {
   let allMarkers = await setMarkers(map);
   usersInBounds = [];
-  for (let i = 0; i < allMarkers.length; i++) {
-    if (map.getBounds().contains(allMarkers[i].getPosition())) {
-      if (usersInBounds.includes(allMarkers[i])) {
-        continue;
+  // for (let i = 0; i < allMarkers.length; i++) {
+
+  allMarkers.map((marker) => {
+    if (map.getBounds().contains(marker.getPosition())) {
+      if (usersInBounds.includes(marker)) {
       } else {
-        usersInBounds.push(allMarkers[i]);
+        usersInBounds.push(marker);
       }
     }
-  }
+  });
+  // }
 
   return usersInBounds;
+}
+
+async function checkIfMarkerIsInBounds(marker, usersInBounds) {
+  if (map.getBounds().contains(marker.getPosition())) {
+    if (usersInBounds.includes(marker)) {
+    } else {
+      usersInBounds.push(marker);
+    }
+  }
 }
 
 //function to create list of markers on layout
