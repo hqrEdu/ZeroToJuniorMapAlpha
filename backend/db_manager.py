@@ -19,8 +19,8 @@ class DatabaseManager:
 
     def add_user(self, username, city_name, field, latitude, longitude):
         self.city_exists(city_name, latitude, longitude)
-        query = """INSERT INTO user_data (username, city_id, field)
-                    SELECT %s, city_id, %s FROM city WHERE city_name = %s;"""
+        query = """INSERT INTO user_data (username, city_id, field) VALUES
+                   (%s, (SELECT city_id FROM city WHERE city_name = %s), %s);"""
         try:
             self.cur.execute(query, (username, field, city_name))
             self.conn.commit()
