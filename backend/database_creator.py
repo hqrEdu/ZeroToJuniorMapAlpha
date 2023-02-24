@@ -5,13 +5,14 @@ user = "user"
 password = "password"
 
 # CREATE Z2J DATABASE
-# conn = psycopg2.connect(server=server, user=user, password=password)
-# conn.autocommit = True
-# cur = conn.cursor()
-# query = """SELECT 'CREATE DATABASE z2j_map' 
-#         WHERE NOT EXISTS (SELECT FROM pg_database WHERE datname = 'z2j_map')"""
-# cur.execute(query)
-# conn.close()
+conn = psycopg2.connect(user=user, password=password, host=host)
+conn.autocommit = True
+cur = conn.cursor()
+try:
+    cur.execute("CREATE DATABASE z2j_map;")
+except psycopg2.errors.DuplicateDatabase:
+    pass
+conn.close()
 
 # CONNECT TO DATABASE
 
