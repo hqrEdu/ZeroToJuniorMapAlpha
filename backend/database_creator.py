@@ -1,24 +1,24 @@
 import psycopg2
 
-user = "postgres"
+host = "host"
+user = "user"
 password = "password"
-host = "localhost"
-port = 5432
 
 # CREATE Z2J DATABASE
-conn = psycopg2.connect(user=user, password=password, host=host, port=port)
+conn = psycopg2.connect(user=user, password=password, host=host)
 conn.autocommit = True
 cur = conn.cursor()
-query = """SELECT 'CREATE DATABASE z2j_map' 
-        WHERE NOT EXISTS (SELECT FROM pg_database WHERE datname = 'z2j_map')"""
-cur.execute(query)
+try:
+    cur.execute("CREATE DATABASE z2j_map;")
+except psycopg2.errors.DuplicateDatabase:
+    pass
 conn.close()
 
 # CONNECT TO DATABASE
 
-database = "z2j_map"
+database = "database"
 
-conn = psycopg2.connect(database=database, user=user, password=password, host=host, port=port)
+conn = psycopg2.connect(host=host, database=database, user=user, password=password)
 cur = conn.cursor()
 
 # CREATE TABLES
@@ -26,16 +26,16 @@ cur = conn.cursor()
 query = """CREATE TABLE city (
             city_id SERIAL PRIMARY KEY,
             city_name VARCHAR(255),
-            latitude FLOAT,
-            longitude FLOAT
+            lat FLOAT,
+            lng FLOAT
         );
 
         CREATE TABLE USER_DATA (
-            username VARCHAR(255) UNIQUE,
+            discord VARCHAR(255) UNIQUE,
             city_id INT REFERENCES city(city_id),
-            field VARCHAR(255) 
+            stack VARCHAR(255) 
         );"""
 
 cur.execute(query)
 conn.commit()
-
+conn.close()
