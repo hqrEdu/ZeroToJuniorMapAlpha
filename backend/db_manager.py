@@ -18,11 +18,13 @@ class DatabaseManager:
         return json.dumps(result, ensure_ascii=False).encode("utf-8")
 
     def add_user(self, discord, city_name, stack, lat, lng):
-        self.city_exists(city_name, lat, lng)
+        exist = self.city_exists(city_name)
+        if not exist:
+            self.add_city(city_name, lat, lng)
         query = """INSERT INTO user_data (discord, city_id, stack) VALUES
                    (%s, (SELECT city_id FROM city WHERE city_name = %s), %s);"""
         try:
-            self.cur.execute(query, (discord, stack, city_name))
+            self.cur.execute(query, (discord, city_name, stack))
             self.conn.commit()
         except psycopg2.errors.UniqueViolation:
             self.conn.rollback()
@@ -37,7 +39,9 @@ class DatabaseManager:
         return json.dumps({"success": True, "message": "discord has been changed succesfully."})
     
     def edit_user_city(self, discord, city_name, lat, lng):
-        self.city_exists(city_name, lat, lng)
+        exist = self.city_exists(city_name)
+        if not exist:
+            self.add_city(city_name, lat, lng)
         query = "SELECT city_id FROM city WHERE city_name = %s;"
         self.cur.execute(query, (city_name,))
         city_id = self.cur.fetchone()
@@ -61,13 +65,14 @@ class DatabaseManager:
     def close_connection(self):
         self.conn.close()
 
-    def city_exists(self, city_name, lat, lng):
+    def city_exists(self, city_name):
         query = "SELECT city_name FROM city WHERE city_name = %s"
         self.cur.execute(query, (city_name,))
         exist = self.cur.fetchone() is not None
-        if not exist:
-            query = "INSERT INTO city (city_name, lat, lng) VALUES (%s, %s, %s);"
-            self.cur.execute(query, (city_name, lat, lng))
-            self.conn.commit()
-
+        return exist
+    
+    def add_city(self, city_name, lat, lng):
+        query = "INSERT INTO city (city_name, lat, lng) VALUES (%s, %s, %s);"
+        self.cur.execute(query, (city_name, lat, lng))
+        self.conn.commit()
 
