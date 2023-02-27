@@ -10,7 +10,7 @@ app = Flask(__name__)
 
 
 # GET endpoint
-@app.route('/get-users')
+@app.route('/users')
 def get_users():
     db = DatabaseManager(database=os.getenv('database'), user=os.getenv('user'), password=os.getenv('password'),
                          host=os.getenv('host'))
