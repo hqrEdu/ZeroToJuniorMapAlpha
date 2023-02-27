@@ -1,20 +1,28 @@
 import os
-from flask import Flask, jsonify, Response, request
+
+from flask import Flask, jsonify, Response
 from db_manager import DatabaseManager
 
 app = Flask(__name__)
 
 
-## post endpoint
+# POST endpoint
 
 
-## get endpoint
+# GET endpoint
+@app.route('/users')
+def get_users():
+    db = DatabaseManager(database=os.getenv('database'), user=os.getenv('user'), password=os.getenv('password'),
+                         host=os.getenv('host'))
+    all_users = db.get_users()
+    db.close_connection()
+    return Response(all_users, mimetype='application/json'), 200
 
 
-## put endpoint
+# PUT endpoint
 
 
-## delete endpoint
+# DELETE endpoint
 @app.route('/users/<discord>', methods=['DELETE'])
 def delete_user(discord):
     db = DatabaseManager(database=os.getenv('database'), user=os.getenv('user'), password=os.getenv('password'),
