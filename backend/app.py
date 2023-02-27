@@ -1,5 +1,5 @@
 import os
-from flask import Flask
+from flask import Flask, jsonify
 from db_manager import DatabaseManager
 
 app = Flask(__name__)
@@ -15,15 +15,17 @@ app = Flask(__name__)
 
 
 ## delete enpoint
-@app.route('/delete-user/<discord>')
+@app.route('/delete-user/<discord>', methods=['DELETE'])
 def delete_user(discord):
     db = DatabaseManager(database=os.getenv('database'), user=os.getenv('user'), password=os.getenv('password'),
                          host=os.getenv('host'))
-    db.delete_user(discord)
-    db.close_connection()
+    try:
+        db.delete_user(discord)
+    except KeyError:
+        return jsonify({"error": "User not found or incorrect user_id"})
+    finally:
+        db.close_connection()
 
 
 if __name__ == '__main__':
     app.run()
-
-
