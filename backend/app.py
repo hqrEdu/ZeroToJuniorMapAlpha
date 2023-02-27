@@ -14,13 +14,15 @@ app = Flask(__name__)
 ## put endpoint
 
 
-## delete enpoint
+## delete endpoint
 @app.route('/delete-user/<discord>', methods=['DELETE'])
 def delete_user(discord):
+
     db = DatabaseManager(database=os.getenv('database'), user=os.getenv('user'), password=os.getenv('password'),
                          host=os.getenv('host'))
     try:
         db.delete_user(discord)
+        return jsonify({"message": "User deleted successfully"}), 200
     except KeyError:
         return jsonify({"error": "User not found or incorrect user_id"})
     finally:
@@ -28,4 +30,4 @@ def delete_user(discord):
 
 
 if __name__ == '__main__':
-    app.run()
+    app.run(debug=True)
