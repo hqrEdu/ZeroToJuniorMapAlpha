@@ -16,7 +16,13 @@ def add_user():
     }
 
     data = request.json
-    if 'discord' not in data or 'city_name' not in data or 'stack' not in data:
+    if not data:
+        response_data['success'] = False
+        response_data['error'] = "Request doesn't contain any data."
+        response = Response(json.dumps(response_data), mimetype='application/json')
+        response.status_code = 400
+    elif:
+        'discord' not in data or 'city_name' not in data or 'stack' not in data:
         response_data['success'] = False
         response_data['error'] = "Please provide all required information"
         response = Response(json.dumps(response_data), mimetype='application/json')
