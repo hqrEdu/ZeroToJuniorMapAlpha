@@ -10,9 +10,6 @@ app = Flask(__name__)
 # POST endpoint
 @app.route('/users', methods=['POST'])
 def add_user():
-    db = DatabaseManager(database=os.getenv('database'), user=os.getenv('user'), password=os.getenv('password'),
-                         host=os.getenv('host'))
-
     response_data = {
         'success': True,
         'data': []
@@ -25,6 +22,8 @@ def add_user():
         response = Response(json.dumps(response_data), mimetype='application/json')
         response.status_code = 400
     else:
+        db = DatabaseManager(database=os.getenv('database'), user=os.getenv('user'), password=os.getenv('password'),
+                             host=os.getenv('host'))
         db_response = db.add_user(
             request.json['discord'],
             request.json['city_name'],
