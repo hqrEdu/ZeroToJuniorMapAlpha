@@ -57,6 +57,9 @@ class DatabaseManager:
         return json.dumps({"success": True, "message": "User stack has been changed succesfully."})
 
     def delete_user(self, discord):
+        user_in_data = self.user_exists(discord)
+        if not user_in_data:
+            return json.dumps({"success": False, "message": "This user does not exist."})
         query = "DELETE FROM user_data WHERE discord = %s"
         self.cur.execute(query, (discord,))
         self.conn.commit()
@@ -65,6 +68,12 @@ class DatabaseManager:
     def close_connection(self):
         self.conn.close()
 
+    def user_exists(self, username):
+        query = "SELECT discord FROM user_data WHERE discord = %s"
+        self.cur.execute(query, (username,))
+        user_in_data = True if self.cur.fetchone() else False
+        return user_in_data
+    
     def city_exists(self, city_name):
         query = "SELECT city_name FROM city WHERE city_name = %s"
         self.cur.execute(query, (city_name,))
