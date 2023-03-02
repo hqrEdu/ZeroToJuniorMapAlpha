@@ -62,17 +62,18 @@ class DatabaseManager:
             self.conn.commit()
             return "stack"
 
+        if not kwargs:
+            return json.dumps({"success": False, "message": "There is no data to be changed"})
+        
         discord = kwargs.get("discord")
         new_discord = kwargs.get("new_discord")
         city_name = kwargs.get("city_name")
         lat = kwargs.get("lat")
         lng = kwargs.get("lng")
         stack = kwargs.get("stack")
-
-        user_in_data = self._user_exists(discord)
         
-        if not kwargs:
-            return json.dumps({"success": False, "message": "There is no data to be changed"})
+        user_in_data = self._user_exists(discord)
+
         if not user_in_data:
             return json.dumps({"success": False, "message": "This user does not exist."})
         
@@ -123,7 +124,3 @@ class DatabaseManager:
         if not exist:
             add_city(city_name, lat, lng)
 
-db = DatabaseManager(database="z2j_map", user="postgres", password="superuser", host="localhost")
-
-
-print(db.edit(discord="Andrzej", city_name="Warsaw", lng=21211.221))
