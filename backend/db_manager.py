@@ -18,9 +18,7 @@ class DatabaseManager:
         return json.dumps(result, ensure_ascii=False).encode("utf-8")
 
     def add_user(self, discord, city_name, stack, lat, lng):
-        exist = self.city_exists(city_name)
-        if not exist:
-            self.add_city(city_name, lat, lng)
+        self._city_exists(city_name, lat, lng)
         query = """INSERT INTO user_data (discord, city_id, stack) VALUES
                    (%s, (SELECT city_id FROM city WHERE city_name = %s), %s);"""
         try:
@@ -39,9 +37,7 @@ class DatabaseManager:
         return json.dumps({"success": True, "message": "discord has been changed succesfully."})
     
     def edit_user_city(self, discord, city_name, lat, lng):
-        exist = self.city_exists(city_name)
-        if not exist:
-            self.add_city(city_name, lat, lng)
+        self._city_exists(city_name, lat, lng)
         query = "SELECT city_id FROM city WHERE city_name = %s;"
         self.cur.execute(query, (city_name,))
         city_id = self.cur.fetchone()
@@ -57,6 +53,9 @@ class DatabaseManager:
         return json.dumps({"success": True, "message": "User stack has been changed succesfully."})
 
     def delete_user(self, discord):
+        user_in_data = self._user_exists(discord)
+        if not user_in_data:
+            return json.dumps({"success": False, "message": "This user does not exist."})
         query = "DELETE FROM user_data WHERE discord = %s"
         self.cur.execute(query, (discord,))
         self.conn.commit()
@@ -65,14 +64,22 @@ class DatabaseManager:
     def close_connection(self):
         self.conn.close()
 
-    def city_exists(self, city_name):
+    def _user_exists(self, username):
+        query = "SELECT discord FROM user_data WHERE discord = %s"
+        self.cur.execute(query, (username,))
+        user_in_data = True if self.cur.fetchone() else False
+        return user_in_data
+    
+    def _city_exists(self, city_name, lat, lng):
+
+        def add_city(city_name, latitude, longitude):
+            query = "INSERT INTO city (city_name, lat, lng) VALUES (%s, %s, %s);"
+            self.cur.execute(query, (city_name, latitude, longitude))
+            self.conn.commit()
+
         query = "SELECT city_name FROM city WHERE city_name = %s"
         self.cur.execute(query, (city_name,))
-        exist = self.cur.fetchone() is not None
-        return exist
-    
-    def add_city(self, city_name, lat, lng):
-        query = "INSERT INTO city (city_name, lat, lng) VALUES (%s, %s, %s);"
-        self.cur.execute(query, (city_name, lat, lng))
-        self.conn.commit()
+        exist = self.cur.fetchone()
+        if not exist:
+            add_city(city_name, lat, lng)
 
