@@ -1,7 +1,6 @@
 import psycopg2
 from psycopg2.extras import RealDictCursor
 from psycopg2 import Error
-import json
 
 
 class DatabaseManager:
@@ -16,111 +15,85 @@ class DatabaseManager:
         try:
             self.cur.execute(query)
             result = self.cur.fetchall()
-            self.cur = self.conn.cursor()
         except Error as error:
-            return json.dumps({"success": False, "message": error.pgerror})
+            return {"success": False, "message": error.pgerror}
         else:
-            return json.dumps(result, ensure_ascii=False).encode("utf-8")
+            return {"success": True, "message": result}   ###   result can be convert to json object 
 
-    def add_user(self, discord, city_name, stack, lat, lng):
-        self._city_exists(city_name, lat, lng)
+    def add_user(self, discord, city_name, stack):
         query = """INSERT INTO user_data (discord, city_id, stack) VALUES
                    (%s, (SELECT city_id FROM city WHERE city_name = %s), %s);"""
         try:
             self.cur.execute(query, (discord, city_name, stack))
             self.conn.commit()
+            return {"success": True, "message": "Sign up successful."}
         except psycopg2.errors.UniqueViolation:
             self.conn.rollback()
-            return json.dumps({"success": False, "message": "User already exists."})
+            return {"success": False, "message": "User already exists."}
         except Error as error:
             self.conn.rollback()
-            return json.dumps({"success": False, "message": error.pgerror})
-        else:
-            return json.dumps({"success": True, "message": "Sign up successful."})
+            return {"success": False, "message": error.pgerror}
 
-    def edit(self, **kwargs):   ### You need to provide which argument you pass, eg (discord = "username", city_name = "Warsaw")
-       
-        def edit_user_name(discord, new_discord):
-            query = "UPDATE user_data SET discord = %s WHERE discord = %s"
-            self.cur.execute(query, (new_discord, discord))
+    def update_user_name(self, old_discord, new_discord):
+        query = "UPDATE user_data SET discord = %s WHERE discord = %s;"
+        try:
+            self.cur.execute(query, (new_discord, old_discord))
             self.conn.commit()
-            return "name"
-    
-        def edit_user_city(discord, city_name, lat, lng):
-            self._city_exists(city_name, lat, lng)
-            query = "SELECT city_id FROM city WHERE city_name = %s;"
-            self.cur.execute(query, (city_name,))
-            city_id = self.cur.fetchone()
-            query = "UPDATE user_data SET city_id = %s WHERE discord = %s;"
+            return {"success": True, "message": "User name has been changed."}
+        except Error as error:
+            self.conn.rollback()
+            return {"success": False, "message": error.pgerror}
+
+    def update_user_city(self, discord, city_id):
+        query = "UPDATE user_data SET city_id = %s WHERE discord = %s;"
+        try:
             self.cur.execute(query, (city_id, discord))
             self.conn.commit()
-            return "city"
-        
-        def edit_user_stack(discord, stack):
-            query = "UPDATE user_data SET stack = %s WHERE discord = %s"
+            return {"success": True, "message": "User city has been updated."}
+        except Error as error:
+            return {"success": False, "message": error.pgerror}
+
+    def update_user_stack(self, discord, stack):
+        query = "UPDATE user_data SET stack = %s WHERE discord = %s;"
+        try:
             self.cur.execute(query, (stack, discord))
             self.conn.commit()
-            return "stack"
-
-        if not kwargs:
-            return json.dumps({"success": False, "message": "There is no data to be changed"})
-        
-        discord = kwargs.get("discord")
-        new_discord = kwargs.get("new_discord")
-        city_name = kwargs.get("city_name")
-        lat = kwargs.get("lat")
-        lng = kwargs.get("lng")
-        stack = kwargs.get("stack")
-        
-        user_in_data = self._user_exists(discord)
-
-        if not user_in_data:
-            return json.dumps({"success": False, "message": "This user does not exist."})
-        
-        changed = []
-        if new_discord:
-            changed.append(edit_user_name(discord, new_discord))
-        if city_name and lat and lng:
-            changed.append(edit_user_city(discord, city_name, lat, lng))
-        if stack:
-            changed.append(edit_user_stack(discord, stack))
-
-        if len(changed) == 0:
-            return json.dumps({"success": False, "message": "Not enough information"})
-        elif len(changed) == 1:
-            return json.dumps({"success": True, "message": f"User {changed[0]} has been changed."})
-        else:
-            return json.dumps({"success": True, "message": f"User {', '.join(changed)} have been changed."})
-        
+            return {"success": True, "message": "User stack has been updated."}
+        except Error as error:
+            return {"success": False, "message": error.pgerror}
 
     def delete_user(self, discord):
-        user_in_data = self._user_exists(discord)
-        if not user_in_data:
-            return json.dumps({"success": False, "message": "This user does not exist."})
-        query = "DELETE FROM user_data WHERE discord = %s"
-        self.cur.execute(query, (discord,))
+        query = "DELETE FROM user_data WHERE discord = %s;"
+        try:
+            self.cur.execute(query, (discord,))
+            self.conn.commit()
+            return {"success": True, "message": "User deleted successfully."}
+        except Error as error:
+            return {"success": False, "message": error.pgerror}
+        
+    def user_exists(self, username):
+        query = "SELECT discord FROM user_data WHERE discord = %s;"
+        self.cur.execute(query, (username,))
+        return True if self.cur.fetchone() else False
+
+    def select_city_id(self, city_name):
+        query = "SELECT city_id FROM city WHERE city_name = %s;"
+        self.cur.execute(query, (city_name,))
+        city_id = self.cur.fetchone()[0]
+        return city_id
+    
+    def city_exists(self, city_name):
+        query = "SELECT city_name FROM city WHERE city_name = %s"
+        self.cur.execute(query, (city_name,))
+        return True if self.cur.fetchone() else False
+
+    def add_city(self, city_name, latitude, longitude):
+        query = "INSERT INTO city (city_name, lat, lng) VALUES (%s, %s, %s);"
+        self.cur.execute(query, (city_name, latitude, longitude))
         self.conn.commit()
-        return json.dumps({"success": True, "message": "User deleted successfully."})
 
     def close_connection(self):
         self.conn.close()
 
-    def _user_exists(self, username):
-        query = "SELECT discord FROM user_data WHERE discord = %s"
-        self.cur.execute(query, (username,))
-        user_in_data = True if self.cur.fetchone() else False
-        return user_in_data
-    
-    def _city_exists(self, city_name, lat, lng):
 
-        def add_city(city_name, latitude, longitude):
-            query = "INSERT INTO city (city_name, lat, lng) VALUES (%s, %s, %s);"
-            self.cur.execute(query, (city_name, latitude, longitude))
-            self.conn.commit()
-
-        query = "SELECT city_name FROM city WHERE city_name = %s"
-        self.cur.execute(query, (city_name,))
-        exist = self.cur.fetchone()
-        if not exist:
-            add_city(city_name, lat, lng)
 
