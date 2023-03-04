@@ -87,6 +87,8 @@ class DatabaseCreator:
             current_tables.add(table[0])
         if current_tables != self.expected_tables:
             return False
+        else:
+            return True
 
     def _check_user_data_columns(self):
         current_columns = set()
@@ -97,6 +99,8 @@ class DatabaseCreator:
 
         if current_columns != self.expected_user_data_columns:
             return False
+        else:
+            return True
 
     def _check_city_columns(self):
         current_columns = set()
@@ -108,14 +112,17 @@ class DatabaseCreator:
 
         if current_columns != self.expected_city_columns:
             return False
+        else:
+            return True
 
     def check_database(self):
         self._connect_to_server()
         self._create_database_if_not_exists()
         self._connect_to_database()
-        if not any([self._check_tables(), self._check_user_data_columns(), self._check_city_columns()]):
+        if not all([self._check_tables(), self._check_user_data_columns(), self._check_city_columns()]):
             self._remake_tables()
         self._close()
 
-
+dcc = DatabaseCreator(host="localhost", user="postgres", password="superuser")
+dcc.check_database()
 
