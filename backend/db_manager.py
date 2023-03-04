@@ -15,10 +15,10 @@ class DatabaseManager:
         try:
             self.cur.execute(query)
             result = self.cur.fetchall()
-        except Error as error:
-            return {"success": False, "message": error.pgerror}
+        except Error:
+            return 503
         else:
-            return {"success": True, "message": result}   ###   result can be convert to json object 
+            return result    ###   result can be convert to json object 
 
     def add_user(self, discord, city_name, stack):
         query = """INSERT INTO user_data (discord, city_id, stack) VALUES
@@ -26,50 +26,49 @@ class DatabaseManager:
         try:
             self.cur.execute(query, (discord, city_name, stack))
             self.conn.commit()
-            return {"success": True, "message": "Sign up successful."}
+            return 201
         except psycopg2.errors.UniqueViolation:
             self.conn.rollback()
-            return {"success": False, "message": "User already exists."}
-        except Error as error:
+            return 409
+        except Error:
             self.conn.rollback()
-            return {"success": False, "message": error.pgerror}
+            return 503
 
     def update_user_name(self, old_discord, new_discord):
         query = "UPDATE user_data SET discord = %s WHERE discord = %s;"
         try:
             self.cur.execute(query, (new_discord, old_discord))
             self.conn.commit()
-            return {"success": True, "message": "User name has been changed."}
-        except Error as error:
+            return 204
+        except Error:
             self.conn.rollback()
-            return {"success": False, "message": error.pgerror}
+            return 503
 
     def update_user_city(self, discord, city_id):
         query = "UPDATE user_data SET city_id = %s WHERE discord = %s;"
         try:
             self.cur.execute(query, (city_id, discord))
             self.conn.commit()
-            return {"success": True, "message": "User city has been updated."}
-        except Error as error:
-            return {"success": False, "message": error.pgerror}
-
+            return 204
+        except Error:
+            return 503
     def update_user_stack(self, discord, stack):
         query = "UPDATE user_data SET stack = %s WHERE discord = %s;"
         try:
             self.cur.execute(query, (stack, discord))
             self.conn.commit()
-            return {"success": True, "message": "User stack has been updated."}
-        except Error as error:
-            return {"success": False, "message": error.pgerror}
+            return 204
+        except Error:
+            return 503
 
     def delete_user(self, discord):
         query = "DELETE FROM user_data WHERE discord = %s;"
         try:
             self.cur.execute(query, (discord,))
             self.conn.commit()
-            return {"success": True, "message": "User deleted successfully."}
-        except Error as error:
-            return {"success": False, "message": error.pgerror}
+            return 204
+        except Error:
+            return 503
         
     def user_exists(self, username):
         query = "SELECT discord FROM user_data WHERE discord = %s;"
