@@ -13,6 +13,7 @@
     <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
     <script src="/frontend/js/form.js"></script>
     <script type="text/javascript" src="/frontend/js/dummyData.json"></script>
+    <script src="https://requirejs.org/docs/release/2.3.5/minified/require.js"></script>
   </head>
   <body>
     <header class="header">
@@ -67,10 +68,10 @@
           </div>
 
           <div class="form formbox-three">
-            <input type="radio" class="form__frontend-input" name="frontend" />
+            <input type="radio" class="form__frontend-input" name="frontend" value="fe" />
             <label class="form__frontend-label" for="frontend">Frontend</label>
 
-            <input type="radio" class="form__backend-input" name="backend" value="backend" />
+            <input type="radio" class="form__backend-input" name="backend" value="be" />
             <label class="form__backend-label" for="backend">Backend</label>
           </div>
 
@@ -81,7 +82,7 @@
               <input type="checkbox" name="personal" id="checkbox" class="form__personal-input" />
               <label class="form__personal-label" for="checkbox">Zgoda na przetwarzanie danych osobowych</label>
             </div>
-            <button class="form__join-btn" onclick="addMe(this.form)" type="button">Dołączam!</button>
+            <button class="form__join-btn" onclick="addMe(this.form)" type="submit">Dołączam!</button>
           </div>
         </div>
       </form>

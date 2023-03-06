@@ -1,4 +1,5 @@
 function addMe(form) {
+  event.preventDefault();
   let nick = form.discord.value;
   let city = form.city.value;
   let stack = form.backend.checked;

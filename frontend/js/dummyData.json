@@ -1,8 +1,8 @@
 [
-  { "discord": "#Magda2013", "city": "Warszawa", "stack": "fe" },
-  { "discord": "#Janek2921", "city": "Piaseczno", "stack": "fe" },
-  { "discord": "#Marek2141", "city": "Józefów", "stack": "fe" },
-  { "discord": "#Robert2927", "city": "Grójec", "stack": "be" },
-  { "discord": "#Daria8201", "city": "Rybnik", "stack": "fe" },
-  { "discord": "#Marek2141", "city": "Los Angeles", "stack": "fe" }
+  { "discord": "#Magda2013", "postal_code": "04-866", "stack": "fe" },
+  { "discord": "#Janek2921", "postal_code": "05-110", "stack": "fe" },
+  { "discord": "#Marek2141", "postal_code": "05-300", "stack": "fe" },
+  { "discord": "#Robert2927", "postal_code": "44-270", "stack": "be" },
+  { "discord": "#Daria8201", "postal_code": "05-660", "stack": "fe" },
+  { "discord": "#Marek2141", "postal_code": "Los Angeles", "stack": "fe" }
 ]

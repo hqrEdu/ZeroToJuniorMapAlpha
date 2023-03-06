@@ -1,17 +1,7 @@
-let usersWithCity = [
-  ["#Magda2013", "Warszawa", "fe"],
-  ["#Janek2921", "Piaseczno", "be"],
-  ["#Marek2141", "Józefów", "fe"],
-  ["#Jagoda2927", "Los Angeles", "fe"],
-  ["#Bartek2191", "Grójec", "fe"],
-  ["#Maciek2918", "Rybnik", "fe"],
-];
-
 var request = new XMLHttpRequest();
 request.open("GET", "./js/dummyData.json", false);
 request.send(null);
-var my_JSON_object = JSON.parse(request.responseText);
-console.log(my_JSON_object);
+var usersWithCity = JSON.parse(request.responseText);
 
 async function initMap() {
   geocoder = new google.maps.Geocoder();
@@ -19,12 +9,13 @@ async function initMap() {
     zoom: 8,
     center: { lat: 52, lng: 21 },
   });
-  usersWithCord = await codeAddress(my_JSON_object);
+  usersWithCord = await codeAddress(usersWithCity);
   //return all markers
   await setMarkers(map);
 
   //return all users on Map
   usersInBounds = await createListOfUsersInBounds(map);
+  usersInBounds = await codeAddress(usersInBounds);
 
   //create divs with users
   await createListOfUsersOnLayout(usersInBounds);
@@ -92,7 +83,8 @@ async function createListOfUsersOnLayout(usersInBounds) {
       document.getElementsByClassName("user__bar")[i].appendChild(name);
       let city = document.createElement("p");
       city.style.fontWeight = "600";
-      let cityText = document.createTextNode(usersInBounds[i].city);
+      console.log(usersInBounds[i].city);
+      let cityText = document.createTextNode(usersInBounds[i].city.long_name);
       city.appendChild(cityText);
       document.getElementsByClassName("user__bar")[i].appendChild(city);
     }
@@ -105,21 +97,25 @@ async function changeSizeOfMap(map) {
     await createListOfUsersOnLayout(usersInBounds);
   });
 }
-//change city to lat and lang
+//change postal code to lat and lang
 async function codeAddress(addressesToCode) {
   for (let i = 0; i < addressesToCode.length; i++) {
     let user = addressesToCode[i];
-    console.log(user.city);
-    let address = user.city;
+    let address = user.postal_code;
     await geocoder.geocode({ address: address }, async function (results, status) {
       if (status == "OK") {
-        lat = (results[0].geometry.bounds.Ua.lo + results[0].geometry.bounds.Ua.hi) / 2;
-        lng = (results[0].geometry.bounds.Ia.lo + results[0].geometry.bounds.Ia.hi) / 2;
-        // user.splice(1, 0, lat);
+        lat = (results[0].geometry.bounds.Va.lo + results[0].geometry.bounds.Va.hi) / 2;
+        lng = (results[0].geometry.bounds.Ka.lo + results[0].geometry.bounds.Ka.hi) / 2;
+        let location = { lat: lat, lng: lng };
+        city = results[0].geometry;
         user.lat = lat;
         user.lng = lng;
-        console.log(user);
-        // user.splice(2, 0, lng);
+        await geocoder.geocode({ location: location }, async function (results, status) {
+          if (status == "OK") {
+            user.city = results[0].address_components[3];
+          }
+        });
+
         return addressesToCode;
       } else {
         alert("Geocode was not successful for the following reason: " + status);
@@ -144,7 +140,7 @@ async function setMarkers(map) {
       icon: user.stack === "be" ? "img/yellow-pin.png" : "img/blue-pin.png",
       shape: shape,
       title: user.discord,
-      city: user.city,
+      postal_code: user.postal_code,
       stack: user.stack,
     });
     allMarkers.push(marker);
