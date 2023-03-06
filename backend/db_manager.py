@@ -22,9 +22,9 @@ class DatabaseManager:
 
     def add_user(self, discord, city_name, stack):
         query = """INSERT INTO user_data (discord, city_id, stack) VALUES
-                   (%s, (SELECT city_id FROM city WHERE city_name = %s), %s);"""
+                   (%(discord)s, (SELECT city_id FROM city WHERE city_name = %(city_name)s), %(stack)s);"""
         try:
-            self.cur.execute(query, (discord, city_name, stack))
+            self.cur.execute(query, ({"discord": discord, "city_name": city_name, "stack": stack}))
             self.conn.commit()
             return 201
         except psycopg2.errors.UniqueViolation:
@@ -35,9 +35,9 @@ class DatabaseManager:
             return 503
 
     def update_user_name(self, old_discord, new_discord):
-        query = "UPDATE user_data SET discord = %s WHERE discord = %s;"
+        query = "UPDATE user_data SET discord = %(new_discord)s WHERE discord = %(old_discord)s;"
         try:
-            self.cur.execute(query, (new_discord, old_discord))
+            self.cur.execute(query, ({"new_discord": new_discord, "old_discord": old_discord}))
             self.conn.commit()
             return 204
         except Error:
@@ -45,54 +45,54 @@ class DatabaseManager:
             return 503
 
     def update_user_city(self, discord, city_id):
-        query = "UPDATE user_data SET city_id = %s WHERE discord = %s;"
+        query = "UPDATE user_data SET city_id = %(city_id)s WHERE discord = %(discord)s;"
         try:
-            self.cur.execute(query, (city_id, discord))
+            self.cur.execute(query, ({"city_id": city_id, "discord": discord}))
             self.conn.commit()
             return 204
         except Error:
             return 503
+        
     def update_user_stack(self, discord, stack):
-        query = "UPDATE user_data SET stack = %s WHERE discord = %s;"
+        query = "UPDATE user_data SET stack = %(stack)s WHERE discord = %(discord)s;"
         try:
-            self.cur.execute(query, (stack, discord))
+            self.cur.execute(query, ({"stack": stack, "discord": discord}))
             self.conn.commit()
             return 204
         except Error:
             return 503
 
     def delete_user(self, discord):
-        query = "DELETE FROM user_data WHERE discord = %s;"
+        query = "DELETE FROM user_data WHERE discord = %(discord)s;"
         try:
-            self.cur.execute(query, (discord,))
+            self.cur.execute(query, ({"discord": discord}))
             self.conn.commit()
             return 204
         except Error:
             return 503
         
-    def user_exists(self, username):
-        query = "SELECT discord FROM user_data WHERE discord = %s;"
-        self.cur.execute(query, (username,))
+    def user_exists(self, discord):
+        query = "SELECT discord FROM user_data WHERE discord = %(discord)s;"
+        self.cur.execute(query, ({"discord": discord}))
         return True if self.cur.fetchone() else False
 
     def select_city_id(self, city_name):
-        query = "SELECT city_id FROM city WHERE city_name = %s;"
-        self.cur.execute(query, (city_name,))
+        query = "SELECT city_id FROM city WHERE city_name = %(city_name)s;"
+        self.cur.execute(query, ({"city_name": city_name}))
         city_id = self.cur.fetchone()[0]
         return city_id
     
     def city_exists(self, city_name):
-        query = "SELECT city_name FROM city WHERE city_name = %s"
-        self.cur.execute(query, (city_name,))
+        query = "SELECT city_name FROM city WHERE city_name = %(city_name)s"
+        self.cur.execute(query, ({"city_name": city_name}))
         return True if self.cur.fetchone() else False
 
     def add_city(self, city_name, latitude, longitude):
-        query = "INSERT INTO city (city_name, lat, lng) VALUES (%s, %s, %s);"
-        self.cur.execute(query, (city_name, latitude, longitude))
+        query = "INSERT INTO city (city_name, lat, lng) VALUES (%(city_name)s, %(latitude)s, %(longitude)s);"
+        self.cur.execute(query, ({"city_name": city_name, "latitude": latitude, "longitude": longitude}))
         self.conn.commit()
 
     def close_connection(self):
         self.conn.close()
-
 
 
