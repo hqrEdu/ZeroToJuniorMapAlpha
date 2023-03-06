@@ -109,8 +109,3 @@ class Database:
         self.conn.close()
 
 
-db = Database(database="z2j_map", user="postgres", password="superuser", host="localhost")
-
-print(db.select_user_city_id("Ania"))
-
-
