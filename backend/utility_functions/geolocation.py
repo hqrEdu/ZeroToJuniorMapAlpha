@@ -3,8 +3,7 @@ from geopy.geocoders import Nominatim
 
 geolocator = Nominatim(user_agent="z2j_map")
 
-def postcode_to_city(zip: str):
-    postcode = zip
+def postcode_to_city(postcode: str):
     location = geolocator.geocode(postcode, addressdetails=True)
     if location:
         if location.raw["address"].get("city"):
