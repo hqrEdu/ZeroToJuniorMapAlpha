@@ -3,7 +3,7 @@ from psycopg2.extras import RealDictCursor
 from psycopg2 import Error
 
 
-class DatabaseManager:
+class Database:
     def __init__(self, database, user, password, host):
         self.conn = psycopg2.connect(database=database, user=user, password=password, host=host, port=5432)
         self.cur = self.conn.cursor()
@@ -18,7 +18,7 @@ class DatabaseManager:
         except Error:
             return 503
         else:
-            return result    ###   result can be convert to json object 
+            return result    
 
     def add_user(self, discord, city_name, stack):
         query = """INSERT INTO user_data (discord, city_id, stack) VALUES
@@ -76,6 +76,18 @@ class DatabaseManager:
         self.cur.execute(query, ({"discord": discord}))
         return True if self.cur.fetchone() else False
 
+    def select_user_city_id(self, discord):
+        query = "SELECT city_id from user_data WHERE discord = %(discord)s;"
+        self.cur.execute(query, ({"discord": discord}))
+        user_city_id = self.cur.fetchone()[0]
+        return user_city_id
+
+    def select_user_stack(self, discord):
+        query = "SELECT stack FROM user_data WHERE discord = %(discord)s"
+        self.cur.execute(query, ({"discord": discord}))
+        user_stack = self.cur.fetchone()[0]
+        return user_stack
+
     def select_city_id(self, city_name):
         query = "SELECT city_id FROM city WHERE city_name = %(city_name)s;"
         self.cur.execute(query, ({"city_name": city_name}))
@@ -92,7 +104,13 @@ class DatabaseManager:
         self.cur.execute(query, ({"city_name": city_name, "latitude": latitude, "longitude": longitude}))
         self.conn.commit()
 
+
     def close_connection(self):
         self.conn.close()
+
+
+db = Database(database="z2j_map", user="postgres", password="superuser", host="localhost")
+
+print(db.select_user_city_id("Ania"))
 
 
