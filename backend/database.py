@@ -18,9 +18,7 @@ class Database:
         except Error:
             return 503
         else:
-            return result  
-        finally:
-            self._close()  
+            return result    
 
     def add_user(self, discord, city_name, stack):
         query = """INSERT INTO user_data (discord, city_id, stack) VALUES
@@ -35,8 +33,6 @@ class Database:
         except Error:
             self.conn.rollback()
             return 503
-        finally:
-            self._close()
 
     def update_user_name(self, old_discord, new_discord):
         query = "UPDATE user_data SET discord = %(new_discord)s WHERE discord = %(old_discord)s;"
@@ -47,8 +43,6 @@ class Database:
         except Error:
             self.conn.rollback()
             return 503
-        finally:
-            self._close()
 
     def update_user_city(self, discord, city_id):
         query = "UPDATE user_data SET city_id = %(city_id)s WHERE discord = %(discord)s;"
@@ -58,8 +52,6 @@ class Database:
             return 204
         except Error:
             return 503
-        finally:
-            self._close()
         
     def update_user_stack(self, discord, stack):
         query = "UPDATE user_data SET stack = %(stack)s WHERE discord = %(discord)s;"
@@ -69,8 +61,6 @@ class Database:
             return 204
         except Error:
             return 503
-        finally:
-            self._close()
 
     def delete_user(self, discord):
         query = "DELETE FROM user_data WHERE discord = %(discord)s;"
@@ -80,58 +70,42 @@ class Database:
             return 204
         except Error:
             return 503
-        finally:
-            self._close()
         
     def user_exists(self, discord):
         query = "SELECT discord FROM user_data WHERE discord = %(discord)s;"
         self.cur.execute(query, ({"discord": discord}))
-        user_exists = self.cur.fetchone()
-        self._close()
-        if user_exists:
-            return True
-        else:
-            return False
+        return True if self.cur.fetchone() else False
 
     def select_user_city_id(self, discord):
         query = "SELECT city_id from user_data WHERE discord = %(discord)s;"
         self.cur.execute(query, ({"discord": discord}))
         user_city_id = self.cur.fetchone()[0]
-        self._close()
         return user_city_id
 
     def select_user_stack(self, discord):
         query = "SELECT stack FROM user_data WHERE discord = %(discord)s"
         self.cur.execute(query, ({"discord": discord}))
         user_stack = self.cur.fetchone()[0]
-        self._close()
         return user_stack
 
     def select_city_id(self, city_name):
         query = "SELECT city_id FROM city WHERE city_name = %(city_name)s;"
         self.cur.execute(query, ({"city_name": city_name}))
         city_id = self.cur.fetchone()[0]
-        self._close()
         return city_id
     
     def city_exists(self, city_name):
         query = "SELECT city_name FROM city WHERE city_name = %(city_name)s"
         self.cur.execute(query, ({"city_name": city_name}))
-        city_exists = self.cur.fetchone()
-        self._close()
-        if city_exists:
-            return True
-        else:
-            return False
+        return True if self.cur.fetchone() else False
 
     def add_city(self, city_name, latitude, longitude):
         query = "INSERT INTO city (city_name, lat, lng) VALUES (%(city_name)s, %(latitude)s, %(longitude)s);"
         self.cur.execute(query, ({"city_name": city_name, "latitude": latitude, "longitude": longitude}))
         self.conn.commit()
-        self._close()
 
-    def _close(self):
-        self.cur.close()
+
+    def close_connection(self):
         self.conn.close()
 
 
