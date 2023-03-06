@@ -15,6 +15,7 @@ async function initMap() {
 
   //return all users on Map
   usersInBounds = await createListOfUsersInBounds(map);
+  console.log(usersInBounds);
   usersInBounds = await codeAddress(usersInBounds);
 
   //create divs with users
@@ -84,7 +85,7 @@ async function createListOfUsersOnLayout(usersInBounds) {
       let city = document.createElement("p");
       city.style.fontWeight = "600";
       console.log(usersInBounds[i].city);
-      let cityText = document.createTextNode(usersInBounds[i].city.long_name);
+      let cityText = document.createTextNode(usersInBounds[i].city);
       city.appendChild(cityText);
       document.getElementsByClassName("user__bar")[i].appendChild(city);
     }
@@ -106,15 +107,10 @@ async function codeAddress(addressesToCode) {
       if (status == "OK") {
         lat = (results[0].geometry.bounds.Va.lo + results[0].geometry.bounds.Va.hi) / 2;
         lng = (results[0].geometry.bounds.Ka.lo + results[0].geometry.bounds.Ka.hi) / 2;
-        let location = { lat: lat, lng: lng };
         city = results[0].geometry;
         user.lat = lat;
         user.lng = lng;
-        await geocoder.geocode({ location: location }, async function (results, status) {
-          if (status == "OK") {
-            user.city = results[0].address_components[3];
-          }
-        });
+        user.city = results[0].address_components[1].long_name;
 
         return addressesToCode;
       } else {
