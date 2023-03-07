@@ -5,7 +5,13 @@ from psycopg2 import Error
 
 class Database:
     def __init__(self, database, user, password, host):
-        self.conn = psycopg2.connect(database=database, user=user, password=password, host=host, port=5432)
+        self.database = database
+        self.user = user
+        self.password = password
+        self.host = host
+
+    def connect(self):
+        self.conn = psycopg2.connect(database=self.database, user=self.user, password=self.password, host=self.host)
         self.cur = self.conn.cursor()
 
     def get_users(self):
@@ -17,9 +23,7 @@ class Database:
             result = self.cur.fetchall()
             return result
         except Error as error:
-            raise error  
-        finally:
-            self._close()  
+            raise error   
 
     def add_user(self, discord, city_name, stack):
         query = """INSERT INTO user_data (discord, city_id, stack) VALUES
@@ -29,8 +33,6 @@ class Database:
             self.conn.commit()
         except Error as error:
             raise error
-        finally:
-            self._close()
 
     def update_user_name(self, old_discord, new_discord):
         query = "UPDATE user_data SET discord = %(new_discord)s WHERE discord = %(old_discord)s;"
@@ -40,8 +42,6 @@ class Database:
         except Error as error:
             self.conn.rollback()
             raise error
-        finally:
-            self._close()
 
     def update_user_city(self, discord, city_id):
         query = "UPDATE user_data SET city_id = %(city_id)s WHERE discord = %(discord)s;"
@@ -50,8 +50,6 @@ class Database:
             self.conn.commit()
         except Error as error:
             raise error
-        finally:
-            self._close()
 
     def update_user_stack(self, discord, stack):
         query = "UPDATE user_data SET stack = %(stack)s WHERE discord = %(discord)s;"
@@ -60,8 +58,6 @@ class Database:
             self.conn.commit()
         except Error as error:
             raise error
-        finally:
-            self._close()
 
     def delete_user(self, discord):
         query = "DELETE FROM user_data WHERE discord = %(discord)s;"
@@ -70,8 +66,6 @@ class Database:
             self.conn.commit()
         except Error as error:
             raise error
-        finally:
-            self._close()
 
     def user_exists(self, discord):
         query = "SELECT discord FROM user_data WHERE discord = %(discord)s;"
@@ -106,6 +100,6 @@ class Database:
         self.cur.execute(query, ({"city_name": city_name, "latitude": latitude, "longitude": longitude}))
         self.conn.commit()
 
-    def _close(self):
+    def disconnect(self):
         self.cur.close()
         self.conn.close()
