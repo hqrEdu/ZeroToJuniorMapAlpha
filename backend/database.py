@@ -15,10 +15,9 @@ class Database:
         try:
             self.cur.execute(query)
             result = self.cur.fetchall()
-        except Error:
-            return 503
-        else:
-            return result  
+            return result
+        except Error as error:
+            raise error  
         finally:
             self._close()  
 
@@ -28,13 +27,8 @@ class Database:
         try:
             self.cur.execute(query, ({"discord": discord, "city_name": city_name, "stack": stack}))
             self.conn.commit()
-            return 201
-        except psycopg2.errors.UniqueViolation:
-            self.conn.rollback()
-            return 409
-        except Error:
-            self.conn.rollback()
-            return 503
+        except Error as error:
+            raise error
         finally:
             self._close()
 
@@ -43,10 +37,9 @@ class Database:
         try:
             self.cur.execute(query, ({"new_discord": new_discord, "old_discord": old_discord}))
             self.conn.commit()
-            return 204
-        except Error:
+        except Error as error:
             self.conn.rollback()
-            return 503
+            raise error
         finally:
             self._close()
 
@@ -55,20 +48,18 @@ class Database:
         try:
             self.cur.execute(query, ({"city_id": city_id, "discord": discord}))
             self.conn.commit()
-            return 204
-        except Error:
-            return 503
+        except Error as error:
+            raise error
         finally:
             self._close()
-        
+
     def update_user_stack(self, discord, stack):
         query = "UPDATE user_data SET stack = %(stack)s WHERE discord = %(discord)s;"
         try:
             self.cur.execute(query, ({"stack": stack, "discord": discord}))
             self.conn.commit()
-            return 204
-        except Error:
-            return 503
+        except Error as error:
+            raise error
         finally:
             self._close()
 
@@ -77,12 +68,11 @@ class Database:
         try:
             self.cur.execute(query, ({"discord": discord}))
             self.conn.commit()
-            return 204
-        except Error:
-            return 503
+        except Error as error:
+            raise error
         finally:
             self._close()
-        
+
     def user_exists(self, discord):
         query = "SELECT discord FROM user_data WHERE discord = %(discord)s;"
         self.cur.execute(query, ({"discord": discord}))
@@ -93,7 +83,7 @@ class Database:
         self.cur.execute(query, ({"discord": discord}))
         user_city_id = self.cur.fetchone()[0]
         return user_city_id
-    
+
     def select_user_stack(self, discord):
         query = "SELECT stack FROM user_data WHERE discord = %(discord)s"
         self.cur.execute(query, ({"discord": discord}))
@@ -105,7 +95,7 @@ class Database:
         self.cur.execute(query, ({"city_name": city_name}))
         city_id = self.cur.fetchone()[0]
         return city_id
-    
+
     def city_exists(self, city_name):
         query = "SELECT city_name FROM city WHERE city_name = %(city_name)s"
         self.cur.execute(query, ({"city_name": city_name}))
