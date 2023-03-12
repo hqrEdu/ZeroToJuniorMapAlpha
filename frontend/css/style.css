@@ -1,0 +1,335 @@
+input[type=radio].form__frontend-input {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  width: 0.7rem;
+  height: 0.7rem;
+  background-color: #2192FF;
+  border-radius: 50%;
+  border: 2px solid #333;
+  position: relative;
+}
+
+input[type=radio].form__frontend-input:focus {
+  background-color: #333;
+  border: none;
+}
+
+input[type=radio].form__backend-input {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  width: 0.7rem;
+  height: 0.7rem;
+  background-color: #F0FF42;
+  border-radius: 50%;
+  border: 2px solid #333;
+  position: relative;
+}
+
+input[type=radio].form__backend-input:focus {
+  background-color: #333;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+:root {
+  font-family: "Manrope", sans-serif;
+  height: 100%;
+  width: 100%;
+  font-size: 1.6rem;
+  overflow: hidden;
+  background-color: #020E04;
+}
+
+.wrapper {
+  margin: 0 auto;
+  width: 100%;
+  max-width: 1300px;
+}
+
+.header {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 35vh;
+}
+.header__box {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+.header__title {
+  color: #15B52B;
+  font-size: 1.6rem;
+}
+.header__text {
+  color: white;
+  font-size: 0.5rem;
+  margin-bottom: 5em;
+}
+.header__img {
+  margin-top: 1em;
+}
+.header .green__bar {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 40px;
+  border-radius: 4px;
+  background-color: #15B52B;
+}
+.header .green__bar-text {
+  font-weight: bold;
+  font-size: 0.7rem;
+  text-align: center;
+  margin: 0.5em;
+  color: white;
+}
+
+.main {
+  position: relative;
+}
+.main .joinus {
+  position: relative;
+}
+.main .joinus__bar {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 40px;
+  border-radius: 4px;
+  background-color: #15B52B;
+  margin-bottom: 1em;
+}
+.main .joinus__text {
+  font-weight: bold;
+  font-size: 0.7rem;
+  text-align: center;
+  margin: 0.5em;
+  color: white;
+}
+.main #map {
+  height: 350px;
+  width: 350px;
+}
+.main .users__list {
+  position: relative;
+  width: 330px;
+  height: 500px;
+  margin: 10px 10px 70px 10px;
+  border-radius: 15px;
+  background-color: #15b52b;
+}
+.main .usersList__text {
+  font-weight: bold;
+  color: white;
+  font-size: 0.7rem;
+  margin-bottom: 1em;
+  text-align: center;
+  padding-top: 5px;
+}
+.main .list__btn {
+  display: flex;
+  justify-content: center;
+  -moz-column-gap: 10px;
+       column-gap: 10px;
+}
+.main .backend__btn {
+  padding: 5px 15px 5px 15px;
+  background-color: #f0ff42;
+  font-weight: 600;
+  border-radius: 15px;
+  border-width: 0px;
+}
+.main .frontend__btn {
+  padding: 5px 15px 5px 15px;
+  background-color: #2192ff;
+  border-radius: 15px;
+  border-width: 0px;
+  color: white;
+  font-weight: 600;
+}
+.main .user__bars {
+  padding: 20px 0px 20px 0px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+.main .user__bar {
+  background-color: white;
+  width: 300px;
+  height: 70px;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: row;
+  font-size: small;
+  justify-content: space-around;
+  align-items: center;
+}
+.main .discord__img {
+  border-radius: 50%;
+  margin: 10px;
+}
+.main .maps {
+  display: flex;
+  flex-direction: row;
+  margin: 15px 15px;
+}
+.main .form {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+.main .form__title {
+  color: #379237;
+  font-size: 0.5rem;
+  margin: 0 0.5em;
+}
+.main .form__title-two {
+  color: #379237;
+  font-size: 0.5rem;
+  margin: 1em 0;
+}
+.main .form__discord-btn {
+  font-size: 0.5rem;
+  border-radius: 2em;
+  border: 2px solid #3c47bd;
+  padding: 0.7em 2em;
+  margin-top: 1em;
+  color: white;
+  cursor: pointer;
+  background-color: #5865f2;
+}
+.main .form__discord-input {
+  color: white;
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  background-color: rgba(255, 255, 255, 0.05);
+  padding: 0.9em 5.7em;
+  font-size: 0.4rem;
+  text-align: center;
+  border-radius: 2em;
+}
+.main .form .formbox-three {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: row;
+  margin: 0.5em 3.6em;
+}
+.main .form__frontend-input {
+  margin-right: 0.5em;
+}
+.main .form__frontend-label {
+  font-size: 0.5rem;
+  color: white;
+  font-weight: bold;
+}
+.main .form__backend-input {
+  margin: 0 0.5em 0 1.5em;
+}
+.main .form__backend-label {
+  font-size: 0.5rem;
+  color: white;
+  font-weight: bold;
+}
+.main .form .formbox-four {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+.main .form__city-input {
+  color: white;
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  background-color: rgba(255, 255, 255, 0.05);
+  padding: 0.9em 5.7em;
+  font-size: 0.4rem;
+  text-align: center;
+  border-radius: 2em;
+}
+.main .form__personal-input {
+  margin: 0 0 3em 0;
+  cursor: pointer;
+}
+.main .form__personal-label {
+  margin: 0 0 3em 1em;
+  font-size: 0.3rem;
+  color: white;
+}
+.main .form__join-btn {
+  cursor: pointer;
+  margin: 0.5em 0.2em;
+  padding: 0.3em 3em;
+  font-size: 0.7rem;
+  color: white;
+  background-color: #15B52B;
+  border: 2px solid #379237;
+  border-radius: 2em;
+}
+
+.footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-direction: column;
+  margin-top: 10em;
+  font-size: 0.5rem;
+  padding: 1.5em 1em;
+  color: white;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  background-color: #09110A;
+}
+.footer__left {
+  margin-bottom: 1em;
+}
+.footer__mid {
+  margin-bottom: 0.5em;
+}
+.footer__img {
+  padding-left: 4em;
+  margin-bottom: 0.5em;
+}
+
+@media only screen and (min-width: 768px) {
+  .footer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: row;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    font-size: 0.5rem;
+    height: 5rem;
+    background-color: #09110A;
+  }
+  .footer__left,
+  .footer__mid,
+  .footer__right {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 1.3em;
+    flex-basis: 40%;
+    text-align: center;
+  }
+  .footer__right {
+    margin-top: 1em;
+  }
+  .footer__text {
+    display: inline-block;
+  }
+  .footer__img {
+    padding-right: 1em;
+  }
+}/*# sourceMappingURL=style.css.map */
