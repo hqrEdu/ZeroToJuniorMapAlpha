@@ -1,6 +1,5 @@
 import psycopg2
 from psycopg2.extras import RealDictCursor
-from psycopg2 import Error
 
 
 class Database:
@@ -13,6 +12,20 @@ class Database:
     def connect(self):
         self.conn = psycopg2.connect(database=self.database, user=self.user, password=self.password, host=self.host)
         self.cur = self.conn.cursor()
+        
+    def handle_exceptions(func):
+        def wrapper(*args, **kwargs):
+            try:
+                func(*args, **kwargs)
+                row_count = args[0].cur.rowcount
+                if row_count == 0:
+                    raise ValueError
+                args[0].conn.commit()
+                return row_count
+            except Exception as error:
+                args[0].conn.rollback()
+                raise error
+        return wrapper
 
     def get_users(self):
         self.cur = self.conn.cursor(cursor_factory=RealDictCursor)
@@ -22,84 +35,59 @@ class Database:
             self.cur.execute(query)
             result = self.cur.fetchall()
             return result
-        except Error as error:
-            raise error   
-
+        except Exception as error:
+            raise error  
+        
+    @handle_exceptions
     def add_user(self, discord, city_name, stack):
         query = """INSERT INTO user_data (discord, city_id, stack) VALUES
                    (%(discord)s, (SELECT city_id FROM city WHERE city_name = %(city_name)s), %(stack)s);"""
-        try:
-            self.cur.execute(query, ({"discord": discord, "city_name": city_name, "stack": stack}))
-            self.conn.commit()
-        except Error as error:
-            raise error
+        self.cur.execute(query, ({"discord": discord, "city_name": city_name, "stack": stack}))
 
-    def update_user_name(self, old_discord, new_discord):
-        query = "UPDATE user_data SET discord = %(new_discord)s WHERE discord = %(old_discord)s;"
-        try:
-            self.cur.execute(query, ({"new_discord": new_discord, "old_discord": old_discord}))
-            self.conn.commit()
-        except Error as error:
-            self.conn.rollback()
-            raise error
+    @handle_exceptions
+    def update_user(self, kwargs):
+        discord = kwargs.get("discord")
+        new_discord = kwargs.get("new_discord")
+        city_id = kwargs.get("city_id")
+        stack = kwargs.get("stack")
+        
+        query = "UPDATE user_data SET "
+        if new_discord:
+            query += f"discord = '{new_discord}', "
+        if city_id:
+            query += f"city_id = '{city_id}', "
+        if stack:
+            query += f"stack = '{stack}', "
 
-    def update_user_city(self, discord, city_id):
-        query = "UPDATE user_data SET city_id = %(city_id)s WHERE discord = %(discord)s;"
-        try:
-            self.cur.execute(query, ({"city_id": city_id, "discord": discord}))
-            self.conn.commit()
-        except Error as error:
-            raise error
+        query = query[:-2] + " WHERE discord = %(discord)s"
+        self.cur.execute(query, ({"discord": discord}))
 
-    def update_user_stack(self, discord, stack):
-        query = "UPDATE user_data SET stack = %(stack)s WHERE discord = %(discord)s;"
-        try:
-            self.cur.execute(query, ({"stack": stack, "discord": discord}))
-            self.conn.commit()
-        except Error as error:
-            raise error
-
+    @handle_exceptions
     def delete_user(self, discord):
         query = "DELETE FROM user_data WHERE discord = %(discord)s;"
+        self.cur.execute(query, ({"discord": discord}))
+
+    @handle_exceptions
+    def add_city(self, city_name, latitude, longitude):
+        query = "INSERT INTO city (city_name, lat, lng) VALUES (%(city_name)s, %(latitude)s, %(longitude)s);"
         try:
-            self.cur.execute(query, ({"discord": discord}))
+            self.cur.execute(query, ({"city_name": city_name, "latitude": latitude, "longitude": longitude}))
             self.conn.commit()
-        except Error as error:
+        except Exception as error:
+            self.conn.rollback()
             raise error
-
-    def user_exists(self, discord):
-        query = "SELECT discord FROM user_data WHERE discord = %(discord)s;"
-        self.cur.execute(query, ({"discord": discord}))
-        return True if self.cur.fetchone() else False
-
-    def select_user_city_id(self, discord):
-        query = "SELECT city_id from user_data WHERE discord = %(discord)s;"
-        self.cur.execute(query, ({"discord": discord}))
-        user_city_id = self.cur.fetchone()[0]
-        return user_city_id
-
-    def select_user_stack(self, discord):
-        query = "SELECT stack FROM user_data WHERE discord = %(discord)s"
-        self.cur.execute(query, ({"discord": discord}))
-        user_stack = self.cur.fetchone()[0]
-        return user_stack
-
+    
     def select_city_id(self, city_name):
         query = "SELECT city_id FROM city WHERE city_name = %(city_name)s;"
         self.cur.execute(query, ({"city_name": city_name}))
         city_id = self.cur.fetchone()[0]
         return city_id
-
+    
     def city_exists(self, city_name):
         query = "SELECT city_name FROM city WHERE city_name = %(city_name)s"
         self.cur.execute(query, ({"city_name": city_name}))
         return True if self.cur.fetchone() else False
-
-    def add_city(self, city_name, latitude, longitude):
-        query = "INSERT INTO city (city_name, lat, lng) VALUES (%(city_name)s, %(latitude)s, %(longitude)s);"
-        self.cur.execute(query, ({"city_name": city_name, "latitude": latitude, "longitude": longitude}))
-        self.conn.commit()
-
+        
     def disconnect(self):
         self.cur.close()
         self.conn.close()
