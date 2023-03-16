@@ -106,7 +106,7 @@ async function codeAddress(addressesToCode) {
     await geocoder.geocode({ address: address }, async function (results, status) {
       if (status == "OK") {
         lat = (results[0].geometry.bounds.Va.lo + results[0].geometry.bounds.Va.hi) / 2;
-        lng = (results[0].geometry.bounds.Ka.lo + results[0].geometry.bounds.Ka.hi) / 2;
+        lng = (results[0].geometry.bounds.Ja.lo + results[0].geometry.bounds.Ja.hi) / 2;
         city = results[0].geometry;
         user.lat = lat;
         user.lng = lng;
