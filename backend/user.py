@@ -1,13 +1,15 @@
 from database import Database
 from utility_functions.geolocation import postcode_to_city, get_location_from_city
-
+from utility_functions.query_helper import QueryHelper
 
 class User:
     db = Database(database="z2j_map", user="postgres", password="superuser", host="localhost")
 
     def get(self):
+        get_users_query = QueryHelper.query_get_users()
         self.db.connect()
-        response = self.db.get_users()
+        response = self.db.get_all(get_users_query)
+        self.db.disconnect()
         return response
 
     def post(self, discord, zip_code, stack):
@@ -16,10 +18,14 @@ class User:
             raise ValueError
         
         self.db.connect()
-        if not self.db.city_exists(city_name):
+        city_id_query, city_id_values = QueryHelper.query_get_city_id(city_name)
+        city_exists = self.db.get_cell(city_id_query, city_id_values)
+        if not city_exists:
             lat, lng = get_location_from_city(city_name)
-            self.db.add_city(city_name, lat, lng)
-        response = self.db.add_user(discord, city_name, stack)
+            add_city_query, add_city_values = QueryHelper.query_add_city(city_name, lat, lng)
+            self.db.run_query(add_city_query, add_city_values)
+        add_user_query, add_user_values = QueryHelper.query_add_user(discord, city_name, stack)
+        response = self.db.run_query(add_user_query, add_user_values)
         self.db.disconnect()
         return response
 
@@ -30,17 +36,25 @@ class User:
             city_name = postcode_to_city(zip_code)
             if not city_name:
                 raise ValueError
-            if not self.db.city_exists(city_name):
+            
+            city_id_query, city_id_values = QueryHelper.query_get_city_id(city_name)
+            city_exists = self.db.get_cell(city_id_query, city_id_values)
+            if not city_exists:
                 lat, lng = get_location_from_city(city_name)
-                self.db.add_city(city_name, lat, lng)
-            city_id = self.db.select_city_id(city_name)
+                add_city_query, add_city_values = QueryHelper.query_add_city(city_name, lat, lng)
+                self.db.run_query(add_city_query, add_city_values)
+
+            city_id = self.db.get_cell(city_id_query, city_id_values)
             del kwargs["zip_code"]
             kwargs["city_id"] = city_id
-        response = self.db.update_user(kwargs)
+        update_user_query, update_user_values = QueryHelper.query_update_user(**kwargs)
+        response = self.db.run_query(update_user_query, update_user_values)
         self.db.disconnect()
         return response
 
     def delete(self, discord):
+        delete_query, delete_values = QueryHelper.query_delete_user(discord)
         self.db.connect()
-        response = self.db.delete_user(discord)
+        response = self.db.run_query(delete_query, delete_values)
+        self.db.disconnect()
         return response
