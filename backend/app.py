@@ -11,10 +11,15 @@ app = Flask(__name__)
 # GET endpoint
 @app.route('/users')
 def get_users():
-    db = DatabaseManager(database=os.getenv('database'), user=os.getenv('user'), password=os.getenv('password'),
+    db = DatabaseManager(database=os.getenv('database'),
+                         user=os.getenv('user'),
+                         password=os.getenv('password'),
                          host=os.getenv('host'))
     all_users = db.get_users()
     db.close_connection()
+    if not all_users:
+        abort(500,
+              description='The server has encountered an unexpected error. Please contact the server administrator')
     return Response(all_users, mimetype='application/json'), 200
 
 
@@ -22,6 +27,7 @@ def get_users():
 
 
 # DELETE endpoint
+
 @app.route('/users', methods=['DELETE'])
 def delete_user():
     discord_id = request.form.get('discord')
@@ -36,7 +42,6 @@ def delete_user():
     else:  # tutaj wyrzuca błąd i przerywa operację, jeśli brak id
         abort(400,
               description='Invalid request. Required data missing (discord id)')
-
 
 if __name__ == '__main__':
     app.run(debug=True)

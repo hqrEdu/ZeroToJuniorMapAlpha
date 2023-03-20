@@ -16,4 +16,3 @@ def invalid_client_request(error):
 def other_server_error(error):
     return jsonify(error=str(error)), 500
 
-
