@@ -17,10 +17,7 @@ def handle_database_error(error):
 def get_users():
     user = User()
     all_users = user.get()
-    if not all_users:
-        raise Exception
-    else:
-        return jsonify(all_users, ), 200
+    return jsonify(all_users, ), 200
 
 
 if __name__ == '__main__':
