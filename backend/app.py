@@ -1,34 +1,36 @@
-import os
+from flask import Flask, jsonify
+from user import User
+from utility_functions.errors_converter import convert_to_http_exception
 
-from flask import Flask, jsonify, Response, abort
-from db_manager import DatabaseManager
 
 app = Flask(__name__)
+
+
+@app.errorhandler(Exception)
+def handle_database_error(error):
+    error = convert_to_http_exception(error)
+    return error
 
 
 # POST endpoint
 
 
 # GET endpoint
-@app.route('/users')
+@app.route('/users', methods=['GET'])
 def get_users():
-    db = DatabaseManager(database=os.getenv('database'),
-                         user=os.getenv('user'),
-                         password=os.getenv('password'),
-                         host=os.getenv('host'))
-    all_users = db.get_users()
-    db.close_connection()
+    user = User()
+    all_users = user.get()
     if not all_users:
-        abort(500,
-              description='The server has encountered an unexpected error. Please contact the server administrator')
-    return Response(all_users, mimetype='application/json'), 200
+        raise Exception
+    else:
+        return jsonify(all_users), 200
 
 
 # PUT endpoint
 
 
 # DELETE endpoint
-#2
+
 
 if __name__ == '__main__':
     app.run(debug=True)
