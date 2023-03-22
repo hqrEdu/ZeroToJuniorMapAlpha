@@ -22,8 +22,9 @@ class DatabaseCreator:
     longitude = "lng"
     database = "z2j_map"
 
-    def __init__(self, host, user, password):
+    def __init__(self, host, port, user, password):
         self.host = host
+        self.port = port
         self.user = user
         self.password = password
         self.database = self.database
@@ -32,11 +33,11 @@ class DatabaseCreator:
         self.expected_city_columns = {self.city_id, self.city_name, self.latitude, self.longitude}
 
     def _connect_to_server(self):
-        self.conn = psycopg2.connect(host=self.host, user=self.user, password=self.password)
+        self.conn = psycopg2.connect(host=self.host, port=self.port, user=self.user, password=self.password)
         self.cur = self.conn.cursor()
     
     def _connect_to_database(self):
-        self.conn = psycopg2.connect(host=self.host, user=self.user, password=self.password, database=self.database)
+        self.conn = psycopg2.connect(host=self.host, port=self.port, user=self.user, password=self.password, database=self.database)
         self.cur = self.conn.cursor()
 
     def _close(self):
@@ -123,6 +124,5 @@ class DatabaseCreator:
             self._remake_tables()
         self._close()
 
-dcc = DatabaseCreator(host="localhost", user="postgres", password="superuser")
-dcc.check_database()
+
 
