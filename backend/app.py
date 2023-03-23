@@ -1,46 +1,40 @@
-import os
+from flask import Flask, jsonify, request
+from user import User
+from utility_functions.errors_converter import convert_to_http_exception
+import re
 
-from flask import Flask, jsonify, Response, abort, request
-from db_manager import DatabaseManager
-import json
 
 app = Flask(__name__)
+
+
+def verify_request(data):
+    if 'discord' not in data or 'zip_code' not in data or 'stack' not in data:
+        raise KeyError
+    elif not isinstance(data['discord'], str):
+        print("Discord id must be a string type.")
+        raise TypeError
+    # Check if 'discord' matches the correct pattern:
+    elif not re.findall("[A-Za-z].*#\d\d\d\d", data['discord']):
+        raise TypeError
+    elif request.json['stack'].lower() not in ["be", "fe"]:
+        raise ValueError
+
+
+def prepare_data(data):
+    data['stack'] = data['stack'].lower()
+    return data
 
 
 # POST endpoint
 @app.route('/users', methods=['POST'])
 def add_user():
-    response_data = {
-        'success': True,
-        'data': []
-    }
-
-    data = request.json
-    if not data:
-        response_data['success'] = False
-        response_data['error'] = "Request doesn't contain any data."
-        response = Response(json.dumps(response_data), mimetype='application/json')
-        response.status_code = 400
-    elif:
-        'discord' not in data or 'city_name' not in data or 'stack' not in data:
-        response_data['success'] = False
-        response_data['error'] = "Please provide all required information"
-        response = Response(json.dumps(response_data), mimetype='application/json')
-        response.status_code = 400
-    else:
-        db = DatabaseManager(database=os.getenv('database'), user=os.getenv('user'), password=os.getenv('password'),
-                             host=os.getenv('host'))
-        db_response = db.add_user(
-            request.json['discord'],
-            request.json['city_name'],
-            request.json['stack'],
-            request.json['lat'],
-            request.json['lng']
-        )
-        response = Response(db_response, mimetype='application/json')
-        response.status_code = 201
-
-    return response
+    verify_request(request.json)
+    data = prepare_data(request.json)
+    user = User()
+    result = user.post(data['discord'], data['zip_code'], data['stack'])
+    print(result)
+    if result:
+        return jsonify(data), 201
 
 
 # GET endpoint
