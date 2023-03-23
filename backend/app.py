@@ -21,20 +21,15 @@ def get_users():
 
 
 # DELETE endpoint
-@app.route('/users', methods=['DELETE'])
+@app.route('/users/delete', methods=['DELETE'])
 def delete_user():
     discord_id = request.form.get('discord')
-    if discord_id:  # tutaj spr czy podany id w formularzu - jak tak, to idzie dalej
-        db = DatabaseManager(database=os.getenv('database'),
-                             user=os.getenv('user'),
-                             password=os.getenv('password'),
-                             host=os.getenv('host'))
-        result = db.delete_user(discord_id)
-        db.close_connection()
-        return Response(result, mimetype='application/json')
-    else:  # tutaj wyrzuca błąd i przerywa operację, jeśli brak id
-        abort(400,
-              description='Invalid request. Required data missing (discord id)')
+    if discord_id:
+        user = User()
+        result = user.delete(discord=discord_id)
+        return jsonify(result), 204
+    else:
+        raise KeyError
 
 
 if __name__ == '__main__':
