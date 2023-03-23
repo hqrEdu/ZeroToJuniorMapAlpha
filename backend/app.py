@@ -1,4 +1,4 @@
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request
 from user import User
 from utility_functions.errors_converter import convert_to_http_exception
 
@@ -17,7 +17,19 @@ def handle_database_error(error):
 def get_users():
     user = User()
     all_users = user.get()
-    return jsonify(all_users, ), 200
+    return jsonify(all_users), 200
+
+
+# DELETE endpoint
+@app.route('/users/delete', methods=['DELETE'])
+def delete_user():
+    discord_id = request.form.get('discord')
+    if discord_id:
+        user = User()
+        result = user.delete(discord=discord_id)
+        return jsonify(result), 204
+    else:
+        raise KeyError
 
 
 if __name__ == '__main__':
