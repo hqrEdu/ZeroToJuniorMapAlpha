@@ -9,22 +9,39 @@ class Database:
         self.password = password
         self.host = host
         self.port = port
+        self.conn = None
+        self.cur = None
 
     def connect(self):
-        self.conn = psycopg2.connect(database=self.database, user=self.user, password=self.password, host=self.host, port=self.port)
-        self.conn.autocommit = True
-        self.cur = self.conn.cursor()
+        if self.conn is None:
+            try:
+                self.conn = psycopg2.connect(
+                    database=self.database,
+                    user=self.user, 
+                    password=self.password, 
+                    host=self.host, 
+                    port=self.port
+                    )
+                self.conn.autocommit = True
+                self.cur = self.conn.cursor() 
+            except psycopg2.DatabaseError as error:
+                raise error
+        return self.conn
+
         
     def get_all(self, query):
+        self.conn = self.connect()
         self.cur = self.conn.cursor(cursor_factory=RealDictCursor)
         try:
             self.cur.execute(query)
             result = self.cur.fetchall()
+            self.cur = self.conn.cursor()
             return result
         except Exception as error:
             raise error  
         
     def get_cell(self, query, values):
+        self.conn = self.connect()
         self.cur.execute(query, (values))
         try:
             cell_value = self.cur.fetchone()[0]
@@ -33,6 +50,7 @@ class Database:
             return False
         
     def run_query(self, query, values):
+        self.conn = self.connect()
         try:
             self.cur.execute(query, (values))
             row_count = self.cur.rowcount
@@ -44,7 +62,3 @@ class Database:
         except Exception as error:
             self.conn.rollback()
             raise error
-        
-    def disconnect(self):
-        self.cur.close()
-        self.conn.close()
