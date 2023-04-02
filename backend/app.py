@@ -3,8 +3,14 @@ from user import User
 from utility_functions.errors_converter import convert_to_http_exception
 import re
 
-
 app = Flask(__name__)
+app.config['JSON_AS_ASCII'] = False
+
+
+@app.errorhandler(Exception)
+def handle_database_error(error):
+    error = convert_to_http_exception(error)
+    return error
 
 
 def verify_request(data):
@@ -38,25 +44,24 @@ def add_user():
 
 
 # GET endpoint
-@app.route('/users')
+@app.route('/users', methods=['GET'])
 def get_users():
-    db = DatabaseManager(database=os.getenv('database'),
-                         user=os.getenv('user'),
-                         password=os.getenv('password'),
-                         host=os.getenv('host'))
-    all_users = db.get_users()
-    db.close_connection()
-    if not all_users:
-        abort(500,
-              description='The server has encountered an unexpected error. Please contact the server administrator')
-    return Response(all_users, mimetype='application/json'), 200
-
-
-# PUT endpoint
+    user = User()
+    all_users = user.get()
+    return jsonify(all_users), 200
 
 
 # DELETE endpoint
-#2
+@app.route('/users/delete', methods=['DELETE'])
+def delete_user():
+    discord_id = request.form.get('discord')
+    if discord_id:
+        user = User()
+        result = user.delete(discord=discord_id)
+        return jsonify(result), 204
+    else:
+        raise KeyError
+
 
 if __name__ == '__main__':
     app.run(debug=True)
