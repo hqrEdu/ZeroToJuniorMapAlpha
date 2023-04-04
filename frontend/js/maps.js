@@ -1,7 +1,13 @@
-var request = new XMLHttpRequest();
-request.open("GET", "./js/dummyData.json", false);
-request.send(null);
-var usersWithCity = JSON.parse(request.responseText);
+let usersFromDb = [];
+
+function getData() {
+  fetch("http://z2j.hqr.at/users", {})
+    .then((res) => res.json())
+    .then((res) => {
+      console.log(res);
+      usersFromDb = res;
+    });
+}
 
 async function initMap() {
   geocoder = new google.maps.Geocoder();
@@ -9,14 +15,13 @@ async function initMap() {
     zoom: 8,
     center: { lat: 52, lng: 21 },
   });
-  usersWithCord = await codeAddress(usersWithCity);
   //return all markers
+  await getData();
   await setMarkers(map);
 
   //return all users on Map
   usersInBounds = await createListOfUsersInBounds(map);
-  console.log(usersInBounds);
-  usersInBounds = await codeAddress(usersInBounds);
+  // usersInBounds = await codeAddress(usersInBounds);
 
   //create divs with users
   await createListOfUsersOnLayout(usersInBounds);
@@ -78,14 +83,12 @@ async function createListOfUsersOnLayout(usersInBounds) {
       usersInBounds[i].icon === "img/blue-pin.png" ? "3px solid red" : "3px solid green";
       document.getElementsByClassName("user__bar")[i].appendChild(img);
       let name = document.createElement("p");
-
       let nameText = document.createTextNode(usersInBounds[i].title);
       name.appendChild(nameText);
       document.getElementsByClassName("user__bar")[i].appendChild(name);
       let city = document.createElement("p");
       city.style.fontWeight = "600";
-      console.log(usersInBounds[i].city);
-      let cityText = document.createTextNode(usersInBounds[i].city);
+      let cityText = document.createTextNode(usersInBounds[i].city_name);
       city.appendChild(cityText);
       document.getElementsByClassName("user__bar")[i].appendChild(city);
     }
@@ -98,29 +101,29 @@ async function changeSizeOfMap(map) {
     await createListOfUsersOnLayout(usersInBounds);
   });
 }
-//change postal code to lat and lang
-async function codeAddress(addressesToCode) {
-  for (let i = 0; i < addressesToCode.length; i++) {
-    let user = addressesToCode[i];
-    let address = user.postal_code;
-    await geocoder.geocode({ address: address }, async function (results, status) {
-      if (status == "OK") {
-        lat = (results[0].geometry.bounds.Va.lo + results[0].geometry.bounds.Va.hi) / 2;
-        lng = (results[0].geometry.bounds.Ja.lo + results[0].geometry.bounds.Ja.hi) / 2;
-        city = results[0].geometry;
-        user.lat = lat;
-        user.lng = lng;
-        user.city = results[0].address_components[1].long_name;
+// //change postal code to lat and lang
+// async function codeAddress(addressesToCode) {
+//   for (let i = 0; i < addressesToCode.length; i++) {
+//     let user = addressesToCode[i];
+//     let address = user.postal_code;
+//     await geocoder.geocode({ address: address }, async function (results, status) {
+//       if (status == "OK") {
+//         lat = (results[0].geometry.bounds.Va.lo + results[0].geometry.bounds.Va.hi) / 2;
+//         lng = (results[0].geometry.bounds.Ja.lo + results[0].geometry.bounds.Ja.hi) / 2;
+//         city = results[0].geometry;
+//         user.lat = lat;
+//         user.lng = lng;
+//         user.city = results[0].address_components[1].long_name;
 
-        return addressesToCode;
-      } else {
-        alert("Geocode was not successful for the following reason: " + status);
-        return [];
-      }
-    });
-  }
-  return addressesToCode;
-}
+//         return addressesToCode;
+//       } else {
+//         alert("Geocode was not successful for the following reason: " + status);
+//         return [];
+//       }
+//     });
+//   }
+//   return addressesToCode;
+// }
 
 async function setMarkers(map) {
   const shape = {
@@ -128,15 +131,14 @@ async function setMarkers(map) {
     type: "poly",
   };
   let allMarkers = [];
-
-  usersWithCord.map((user) => {
+  usersFromDb.map((user) => {
     let marker = new google.maps.Marker({
       position: { lat: user.lat, lng: user.lng },
       map,
       icon: user.stack === "be" ? "img/yellow-pin.png" : "img/blue-pin.png",
       shape: shape,
       title: user.discord,
-      postal_code: user.postal_code,
+      city_name: user.city_name,
       stack: user.stack,
     });
     allMarkers.push(marker);
