@@ -3,7 +3,7 @@ charset-normalizer==3.0.1
 click==8.1.3
 colorama==0.4.6
 Flask==2.2.2
-flask_api = 3.0.post1
+flask_api==3.0.post1
 flask-cors==3.0.10
 flask-googlemaps==0.4.1
 geographiclib==2.0

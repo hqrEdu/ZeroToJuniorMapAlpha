@@ -7,4 +7,4 @@ class InternalServerError(APIException):
 
 class BadRequest(APIException):
     detail = None
-    status_code = 404
+    status_code = 400
