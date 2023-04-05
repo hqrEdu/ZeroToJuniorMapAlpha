@@ -1,6 +1,6 @@
 import psycopg2
 from psycopg2.extras import RealDictCursor
-
+from utility_functions.api_exceptions import InternalServerError, BadRequest
 
 class Database:
     def __init__(self, database, user, password, host, port):
@@ -24,8 +24,8 @@ class Database:
                     )
                 self.conn.autocommit = True
                 self.cur = self.conn.cursor() 
-            except psycopg2.DatabaseError as error:
-                raise error
+            except psycopg2.DatabaseError as e:
+                raise InternalServerError
         return self.conn
 
         
@@ -37,8 +37,8 @@ class Database:
             result = self.cur.fetchall()
             self.cur = self.conn.cursor()
             return result
-        except Exception as error:
-            raise error  
+        except Exception:
+            raise InternalServerError  
         
     def get_cell(self, query, values):
         self.conn = self.connect()
@@ -55,10 +55,13 @@ class Database:
             self.cur.execute(query, (values))
             row_count = self.cur.rowcount
             if row_count == 0:
-                raise ValueError
+                raise BadRequest
             else:
                 self.conn.commit()
                 return row_count
-        except Exception as error:
+        except psycopg2.errors.UniqueViolation:
             self.conn.rollback()
-            raise error
+            raise BadRequest(detail="Entered discord username already exists in the database.")
+        except Exception:
+            self.conn.rollback()
+            raise InternalServerError

@@ -1,5 +1,5 @@
 from geopy.geocoders import Nominatim
-
+from utility_functions.api_exceptions import BadRequest
 
 geolocator = Nominatim(user_agent="z2j_map")
 
@@ -12,7 +12,7 @@ def postcode_to_city(postcode: str):
     elif location.raw["address"].get("village"):
         city = location.raw["address"]["village"]
     else:
-        raise ValueError
+        raise BadRequest(detail="The postal code does not exist")
     return city
 
 
