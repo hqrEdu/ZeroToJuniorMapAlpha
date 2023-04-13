@@ -4,11 +4,9 @@ function getData() {
   fetch("http://z2j.hqr.at/users", {})
     .then((res) => res.json())
     .then((res) => {
-      console.log(res);
       usersFromDb = res;
     });
 }
-console.log(usersFromDb);
 async function initMap() {
   geocoder = new google.maps.Geocoder();
   const map = new google.maps.Map(document.getElementById("map"), {
@@ -21,7 +19,6 @@ async function initMap() {
 
   //return all users on Map
   usersInBounds = await createListOfUsersInBounds(map);
-  // usersInBounds = await codeAddress(usersInBounds);
 
   //create divs with users
   await createListOfUsersOnLayout(usersInBounds);
@@ -60,14 +57,20 @@ async function checkIfMarkerIsInBounds(marker, usersInBounds) {
 //function to create list of markers on layout
 async function createListOfUsersOnLayout(usersInBounds) {
   //check filtering buttons
-  if (be === true) {
-    const markersOnMapAfterFiltering = Object.values(usersInBounds).filter((bar) => bar.stack.includes("be"));
+  if (fe === true && be === true) {
+    usersInBounds = usersInBounds;
+  } else if (be === true) {
+    const markersOnMapAfterFiltering = usersInBounds.filter((bar) => bar.stack === "be");
     usersInBounds = markersOnMapAfterFiltering;
   } else if (fe === true) {
-    const markersOnMapAfterFiltering = Object.values(usersInBounds).filter((bar) => bar.stack.includes("fe"));
+    const markersOnMapAfterFiltering = usersInBounds.filter((bar) => bar.stack === "fe");
     usersInBounds = markersOnMapAfterFiltering;
   }
   //create divs with data
+  els = document.getElementsByClassName("user__bar");
+  while (els.length > 0) {
+    els[0].parentNode.removeChild(els[0]);
+  }
   for (i = 0; i < usersInBounds.length; i++) {
     if (document.getElementById(usersInBounds[i].title) === null) {
       //create an element
@@ -181,5 +184,6 @@ async function listFiltering(filter) {
     fe = !fe;
   }
   activeClassForBtn(filter);
+  createListOfUsersOnLayout(usersInBounds);
 }
 window.initMap = initMap;
