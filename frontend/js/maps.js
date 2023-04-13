@@ -8,7 +8,7 @@ function getData() {
       usersFromDb = res;
     });
 }
-
+console.log(usersFromDb);
 async function initMap() {
   geocoder = new google.maps.Geocoder();
   const map = new google.maps.Map(document.getElementById("map"), {

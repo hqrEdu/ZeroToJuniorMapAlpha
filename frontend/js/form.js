@@ -1,3 +1,5 @@
+const { parseJSON } = require("jquery");
+
 function addMe(form) {
   event.preventDefault();
   let nick = form.discord.value;
@@ -7,12 +9,23 @@ function addMe(form) {
   console.log(nick, postal_code, stack);
 
   fetch("http://z2j.hqr.at/users", {
-    headers: { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" },
+    headers: { "Content-Type": "application/json" },
     method: "POST",
     body: JSON.stringify({
       discord: nick,
       zip_code: postal_code,
       stack: stack,
     }),
-  }).then((res) => console.log(res));
+  })
+    .then((res) => {
+      console.log(res);
+
+      // console.log(res.body.getReader());
+      return res.json();
+    })
+
+    .then((res) => {
+      console.log(res.detail);
+      alert(res.detail);
+    });
 }
