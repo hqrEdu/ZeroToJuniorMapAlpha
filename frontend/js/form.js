@@ -24,6 +24,8 @@ function addMe(form) {
 
     .then((res) => {
       console.log(res.detail);
-      alert(res.detail);
+      if (res.detail !== undefined) {
+        alert(res.detail);
+      }
     });
 }
