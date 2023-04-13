@@ -57,7 +57,7 @@ async function checkIfMarkerIsInBounds(marker, usersInBounds) {
 //function to create list of markers on layout
 async function createListOfUsersOnLayout(usersInBounds) {
   //check filtering buttons
-  if (fe === true && be === true) {
+  if (be === true && fe === true) {
     usersInBounds = usersInBounds;
   } else if (be === true) {
     const markersOnMapAfterFiltering = usersInBounds.filter((bar) => bar.stack === "be");
@@ -164,13 +164,23 @@ let be = false;
 let fe = false;
 
 function activeClassForBtn(btn) {
-  if (be) {
+  if (be && fe) {
     btn = document.getElementById("be");
     btn.style.border = "2px solid red";
-  } else if (fe) {
     btn = document.getElementById("fe");
     btn.style.border = "2px solid red";
-  } else {
+  }
+  if (be && !fe) {
+    btn = document.getElementById("be");
+    btn.style.border = "2px solid red";
+    btn = document.getElementById("fe");
+    btn.style.border = "";
+  } else if (fe && !be) {
+    btn = document.getElementById("be");
+    btn.style.border = "";
+    btn = document.getElementById("fe");
+    btn.style.border = "2px solid red";
+  } else if (!be & !fe) {
     btn = document.getElementById("be");
     btn.style.border = "";
     btn = document.getElementById("fe");
