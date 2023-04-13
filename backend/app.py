@@ -40,7 +40,7 @@ def get_users():
 # DELETE endpoint
 @app.route('/users/delete', methods=['DELETE'])
 def delete_user():
-    discord_id = request.form.get('discord')
+    discord_id = request.json['discord']
     if discord_id:
         user = User()
         result = user.delete(discord=discord_id)
