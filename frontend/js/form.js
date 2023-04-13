@@ -1,5 +1,3 @@
-const { parseJSON } = require("jquery");
-
 function addMe(form) {
   event.preventDefault();
   let nick = form.discord.value;
