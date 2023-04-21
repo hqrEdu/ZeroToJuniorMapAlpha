@@ -1,37 +1,34 @@
-let usersFromDb = [];
-
-function getData() {
-  fetch("http://z2j.hqr.at/users", {})
-    .then((res) => res.json())
-    .then((res) => {
-      usersFromDb = res;
-    });
+async function getData() {
+  const response = await fetch("http://z2j.hqr.at/users");
+  const data = await response.json();
+  return data;
 }
 async function initMap() {
+  data = await getData();
+
   geocoder = new google.maps.Geocoder();
   const map = new google.maps.Map(document.getElementById("map"), {
     zoom: 8,
     center: { lat: 52, lng: 21 },
   });
+
   //return all markers
-  await getData();
-  await setMarkers(map);
+  setMarkers(map, data);
 
   //return all users on Map
-  usersInBounds = await createListOfUsersInBounds(map);
+  usersInBounds = createListOfUsersInBounds(map);
 
   //create divs with users
-  await createListOfUsersOnLayout(usersInBounds);
+  createListOfUsersOnLayout(usersInBounds);
 
   //change size of map and create new list
-  await changeSizeOfMap(map);
+  changeSizeOfMap(map);
 }
 
 // function which create list of markers
 async function createListOfUsersInBounds(map) {
-  let allMarkers = await setMarkers(map);
+  let allMarkers = await setMarkers(map, data);
   usersInBounds = [];
-
   allMarkers.map((marker) => {
     if (map.getBounds().contains(marker.getPosition())) {
       if (usersInBounds.includes(marker)) {
@@ -128,7 +125,7 @@ async function changeSizeOfMap(map) {
 //   return addressesToCode;
 // }
 
-async function setMarkers(map) {
+async function setMarkers(map, usersFromDb) {
   const shape = {
     coords: [1, 1, 1, 20, 18, 20, 18, 1],
     type: "poly",

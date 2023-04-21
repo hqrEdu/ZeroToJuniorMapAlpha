@@ -47,45 +47,47 @@
         </div>
       </section>
 
-      <section class="joinus">
-        <div class="„wrapper”">
-          <div class="joinus__bar">
-            <p class="joinus__text">Daj się poznać! Dołącz do naszej listy!</p>
-          </div>
-        </div>
-      </section>
-
-      <form class="form">
-        <div class="wrapper">
-          <div class="form formbox">
-            <h2 class="form__title">Wypełnij formularz i dołącz do list programistów!</h2>
-            <button class="form__discord-btn">Dołącz przez konto DISCORD</button>
-          </div>
-
-          <div class="form formbox-two">
-            <h2 class="form__title-two">lub wpisz się bezpośrednio do naszej mapy!</h2>
-            <input type="text" name="discord" value="Twój nick z Discord" class="form__discord-input" />
-          </div>
-
-          <div class="form formbox-three">
-            <input type="radio" class="form__frontend-input" name="radiobutt" value="fe" />
-            <label class="form__frontend-label" for="frontend">Frontend</label>
-
-            <input type="radio" class="form__backend-input" name="radiobutt" value="be" />
-            <label class="form__backend-label" for="backend">Backend</label>
-          </div>
-
-          <div class="form formbox-four">
-            <input type="text" name="postal_code" value="Kod pocztowy..." class="form__city-input" />
-
-            <div class="personal__box">
-              <input type="checkbox" name="personal" id="checkbox" class="form__personal-input" />
-              <label class="form__personal-label" for="checkbox">Zgoda na przetwarzanie danych osobowych</label>
+      <div class="section-form">
+        <section class="joinus">
+          <div class="„wrapper”">
+            <div class="joinus__bar">
+              <p class="joinus__text">Daj się poznać! Dołącz do naszej listy!</p>
             </div>
-            <button class="form__join-btn" onclick="addMe(this.form)" type="submit">Dołączam!</button>
           </div>
-        </div>
-      </form>
+        </section>
+
+        <form class="form">
+          <div class="wrapper">
+            <div class="form formbox">
+              <h2 class="form__title">Wypełnij formularz i dołącz do list programistów!</h2>
+              <button class="form__discord-btn">Dołącz przez konto DISCORD</button>
+            </div>
+
+            <div class="form formbox-two">
+              <h2 class="form__title-two">lub wpisz się bezpośrednio do naszej mapy!</h2>
+              <input type="text" name="discord" value="Twój nick z Discord" class="form__discord-input" />
+            </div>
+
+            <div class="form formbox-three">
+              <input type="radio" class="form__frontend-input" name="radiobutt" value="fe" />
+              <label class="form__frontend-label" for="frontend">Frontend</label>
+
+              <input type="radio" class="form__backend-input" name="radiobutt" value="be" />
+              <label class="form__backend-label" for="backend">Backend</label>
+            </div>
+
+            <div class="form formbox-four">
+              <input type="text" name="postal_code" value="Kod pocztowy..." class="form__city-input" />
+
+              <div class="personal__box">
+                <input type="checkbox" name="personal" id="checkbox" class="form__personal-input" />
+                <label class="form__personal-label" for="checkbox">Zgoda na przetwarzanie danych osobowych</label>
+              </div>
+              <button class="form__join-btn" onclick="addMe(this.form)" type="submit">Dołączam!</button>
+            </div>
+          </div>
+        </form>
+      </div>
     </main>
 
     <footer class="footer">
