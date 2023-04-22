@@ -16,8 +16,8 @@ def postcode_to_city(postcode: str):
     return city
 
 
-def get_location_from_city(city):
-    location = geolocator.geocode(city)
+def get_location_from_postcode(postcode: str):
+    location = geolocator.geocode(postcode)
     return location.latitude, location.longitude
 
 
