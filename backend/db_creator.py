@@ -135,7 +135,7 @@ class DatabaseCreator:
         for column in self.cur.fetchall():
             current_columns.add(column[0])
 
-        if current_columns != self.expected_cities_columns:
+        if current_columns != self.expected_postcodes_columns:
             return False
         else:
             return True
@@ -149,3 +149,9 @@ class DatabaseCreator:
                         self._check_postcodes_columns()]):
             self._remake_tables()
         self._close()
+
+
+
+dc = DatabaseCreator(user="postgres", password="superuser", host="localhost", port=5432)
+
+dc.get_proper_database()
