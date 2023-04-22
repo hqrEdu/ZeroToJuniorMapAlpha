@@ -36,7 +36,6 @@ class QueryHelper:
             where_condition += f" AND stack != '{stack}'"
 
         query = query[:-2] + " WHERE discord = %(discord)s" + where_condition
-        print(query)
         values = {"discord": discord}
         return query, values
     
