@@ -24,7 +24,7 @@ class Database:
                     )
                 self.conn.autocommit = True
                 self.cur = self.conn.cursor() 
-            except psycopg2.DatabaseError as e:
+            except psycopg2.DatabaseError:
                 raise InternalServerError
         return self.conn
 

@@ -18,6 +18,7 @@ class DatabaseCreator:
     postcodes_table = "postcodes"
     discord_column = "discord"
     city_id_column = "city_id"
+    postcode_id_column = "postcode_id"
     stack_column = "stack"
     city_name_column = "city_name"
     postcode_column = "postcode"
@@ -31,9 +32,9 @@ class DatabaseCreator:
         self.password = password
         self.database = self.database
         self.expected_tables = {self.user_data_table, self.cities_table, self.postcodes_table}
-        self.expected_user_data_columns = {self.discord_column, self.city_id_column, self.stack_column}
+        self.expected_user_data_columns = {self.discord_column, self.city_id_column, self.postcode_id_column, self.stack_column}
         self.expected_cities_columns = {self.city_id_column, self.city_name_column}
-        self.expected_postcodes_columns = {self.postcode_column, self.city_id_column, self.latitude_column, self.longitude_column}
+        self.expected_postcodes_columns = {self.postcode_id_column, self.postcode_column, self.city_id_column, self.latitude_column, self.longitude_column}
 
     def _connect_to_server(self):
         self.conn = psycopg2.connect(host=self.host, port=self.port, user=self.user, password=self.password)
@@ -63,6 +64,7 @@ class DatabaseCreator:
         );
 
         CREATE TABLE %s (
+            %s SERIAL PRIMARY KEY,
             %s VARCHAR(20) UNIQUE,
             %s INT REFERENCES %s(%s),
             %s FLOAT,
@@ -72,14 +74,16 @@ class DatabaseCreator:
         CREATE TABLE %s (
             %s VARCHAR(255) UNIQUE,
             %s INT REFERENCES %s(%s),
+            %s INT REFERENCES %s(%s),
             %s VARCHAR(255) 
         );"""
         self.cur.execute(query, (asis(self.cities_table), asis(self.city_id_column), asis(self.city_name_column),
-                                    asis(self.postcodes_table), asis(self.postcode_column), asis(self.city_id_column),
+                                    asis(self.postcodes_table), asis(self.postcode_id_column), asis(self.postcode_column), asis(self.city_id_column),
                                     asis(self.cities_table), asis(self.city_id_column), asis(self.latitude_column), 
                                     asis(self.longitude_column),
                                     asis(self.user_data_table), asis(self.discord_column), asis(self.city_id_column),
-                                    asis(self.cities_table), asis(self.city_id_column), asis(self.stack_column)))
+                                    asis(self.cities_table), asis(self.city_id_column), asis(self.postcode_id_column),
+                                    asis(self.postcodes_table), asis(self.postcode_id_column), asis(self.stack_column)))
         self.conn.commit()
 
     def _create_database_if_not_exists(self):
