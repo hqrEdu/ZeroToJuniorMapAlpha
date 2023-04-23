@@ -23,22 +23,21 @@ class QueryHelper:
         discord = kwargs.get("discord")
         new_discord = kwargs.get("new_discord")
         city_id = kwargs.get("city_id")
+        postcode_id = kwargs.get("postcode_id")
         stack = kwargs.get("stack")
         
         query = "UPDATE user_data SET "
-        where_condition = ""
 
         if new_discord:
             query += f"discord = '{new_discord}', "
-            where_condition += f" AND discord != '{new_discord}'"
         if city_id:
             query += f"city_id = {city_id}, "
-            where_condition += f" AND city_id != {city_id}"
+        if postcode_id:
+            query += f"postcode_id = {postcode_id}, "
         if stack:
             query += f"stack = '{stack}', "
-            where_condition += f" AND stack != '{stack}'"
 
-        query = query[:-2] + " WHERE discord = %(discord)s" + where_condition
+        query = query[:-2] + " WHERE discord = %(discord)s"
         values = {"discord": discord}
         return query, values
     
