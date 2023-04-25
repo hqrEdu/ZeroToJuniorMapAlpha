@@ -12,15 +12,18 @@ from psycopg2.extensions import AsIs as asis
 
 class DatabaseCreator:
 
-    city = "city"
-    user_data = "user_data"
-    discord = "discord"
-    city_id = "city_id"
-    stack = "stack"
-    city_name = "city_name"
-    latitude = "lat"
-    longitude = "lng"
     database = "z2j_map"
+    user_data_table = "user_data"
+    cities_table = "cities"
+    postcodes_table = "postcodes"
+    discord_column = "discord"
+    city_id_column = "city_id"
+    postcode_id_column = "postcode_id"
+    stack_column = "stack"
+    city_name_column = "city_name"
+    postcode_column = "postcode"
+    latitude_column = "lat"
+    longitude_column = "lng"
 
     def __init__(self, host, port, user, password):
         self.host = host
@@ -28,9 +31,10 @@ class DatabaseCreator:
         self.user = user
         self.password = password
         self.database = self.database
-        self.expected_tables = {self.city, self.user_data}
-        self.expected_user_data_columns = {self.discord, self.city_id, self.stack}
-        self.expected_city_columns = {self.city_id, self.city_name, self.latitude, self.longitude}
+        self.expected_tables = {self.user_data_table, self.cities_table, self.postcodes_table}
+        self.expected_user_data_columns = {self.discord_column, self.city_id_column, self.postcode_id_column, self.stack_column}
+        self.expected_cities_columns = {self.city_id_column, self.city_name_column}
+        self.expected_postcodes_columns = {self.postcode_id_column, self.postcode_column, self.city_id_column, self.latitude_column, self.longitude_column}
 
     def _connect_to_server(self):
         self.conn = psycopg2.connect(host=self.host, port=self.port, user=self.user, password=self.password)
@@ -56,7 +60,13 @@ class DatabaseCreator:
     def _create_tables(self):
         query = """CREATE TABLE %s (
             %s SERIAL PRIMARY KEY,
-            %s VARCHAR(255),
+            %s VARCHAR(255)
+        );
+
+        CREATE TABLE %s (
+            %s SERIAL PRIMARY KEY,
+            %s VARCHAR(20) UNIQUE,
+            %s INT REFERENCES %s(%s),
             %s FLOAT,
             %s FLOAT
         );
@@ -64,11 +74,16 @@ class DatabaseCreator:
         CREATE TABLE %s (
             %s VARCHAR(255) UNIQUE,
             %s INT REFERENCES %s(%s),
+            %s INT REFERENCES %s(%s),
             %s VARCHAR(255) 
         );"""
-        self.cur.execute(query, (asis(self.city), asis(self.city_id), 
-                                asis(self.city_name), asis(self.latitude), asis(self.longitude), asis(self.user_data),
-                                asis(self.discord), asis(self.city_id), asis(self.city), asis(self.city_id), asis(self.stack)))
+        self.cur.execute(query, (asis(self.cities_table), asis(self.city_id_column), asis(self.city_name_column),
+                                    asis(self.postcodes_table), asis(self.postcode_id_column), asis(self.postcode_column), asis(self.city_id_column),
+                                    asis(self.cities_table), asis(self.city_id_column), asis(self.latitude_column), 
+                                    asis(self.longitude_column),
+                                    asis(self.user_data_table), asis(self.discord_column), asis(self.city_id_column),
+                                    asis(self.cities_table), asis(self.city_id_column), asis(self.postcode_id_column),
+                                    asis(self.postcodes_table), asis(self.postcode_id_column), asis(self.stack_column)))
         self.conn.commit()
 
     def _create_database_if_not_exists(self):
@@ -94,7 +109,7 @@ class DatabaseCreator:
     def _check_user_data_columns(self):
         current_columns = set()
         query = "SELECT column_name FROM information_schema.columns WHERE table_name = %s;"
-        self.cur.execute(query, (self.user_data,))
+        self.cur.execute(query, (self.user_data_table,))
         for column in self.cur.fetchall():
             current_columns.add(column[0])
 
@@ -103,26 +118,44 @@ class DatabaseCreator:
         else:
             return True
 
-    def _check_city_columns(self):
+    def _check_cities_columns(self):
         current_columns = set()
         query = "SELECT column_name FROM information_schema.columns WHERE table_name = %s;"
-        self.cur.execute(query, (self.city,))
+        self.cur.execute(query, (self.cities_table,))
 
         for column in self.cur.fetchall():
             current_columns.add(column[0])
 
-        if current_columns != self.expected_city_columns:
+        if current_columns != self.expected_cities_columns:
+            return False
+        else:
+            return True
+        
+    def _check_postcodes_columns(self):
+        current_columns = set()
+        query = "SELECT column_name FROM information_schema.columns WHERE table_name = %s;"
+        self.cur.execute(query, (self.postcodes_table,))
+
+        for column in self.cur.fetchall():
+            current_columns.add(column[0])
+
+        if current_columns != self.expected_postcodes_columns:
             return False
         else:
             return True
 
-    def check_database(self):
+
+    def get_proper_database(self):
         self._connect_to_server()
         self._create_database_if_not_exists()
         self._connect_to_database()
-        if not all([self._check_tables(), self._check_user_data_columns(), self._check_city_columns()]):
+        if not all([self._check_tables(), self._check_user_data_columns(), self._check_cities_columns(),
+                        self._check_postcodes_columns()]):
             self._remake_tables()
         self._close()
 
 
 
+dc = DatabaseCreator(user="postgres", password="superuser", host="localhost", port=5432)
+
+dc.get_proper_database()

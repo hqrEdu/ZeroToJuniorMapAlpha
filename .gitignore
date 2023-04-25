@@ -349,3 +349,4 @@ $RECYCLE.BIN/
 # Windows shortcuts
 *.lnk
 
+backend/.env_example

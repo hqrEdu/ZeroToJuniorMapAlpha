@@ -1,6 +1,6 @@
 import os
 from database import Database
-from utility_functions.geolocation import postcode_to_city, get_location_from_city
+from utility_functions.geolocation import postcode_to_city, get_location_from_postcode
 from utility_functions.query_helper import QueryHelper
 
 class User:
@@ -21,12 +21,19 @@ class User:
     def post(self, discord, zip_code, stack):
         city_name = postcode_to_city(zip_code)
         city_id_query, city_id_values = QueryHelper.query_get_city_id(city_name)
-        city_exists = self.db.get_cell(city_id_query, city_id_values)
-        if not city_exists:
-            lat, lng = get_location_from_city(city_name)
-            add_city_query, add_city_values = QueryHelper.query_add_city(city_name, lat, lng)
+        city_id = self.db.get_cell(city_id_query, city_id_values)
+        if not city_id:
+            add_city_query, add_city_values = QueryHelper.query_add_city(city_name)
             self.db.run_query(add_city_query, add_city_values)
-        add_user_query, add_user_values = QueryHelper.query_add_user(discord, city_name, stack)
+            city_id = self.db.get_cell(city_id_query, city_id_values)
+        postcode_query, postcode_values = QueryHelper.query_get_postcode(zip_code)
+        postcode_id = self.db.get_cell(postcode_query, postcode_values)
+        if not postcode_id:
+            lat, lng = get_location_from_postcode(zip_code)
+            add_postcode_query, add_postcode_values = QueryHelper.query_add_postcode(zip_code, city_id, lat, lng)
+            self.db.run_query(add_postcode_query, add_postcode_values)
+            postcode_id = self.db.get_cell(postcode_query, postcode_values)
+        add_user_query, add_user_values = QueryHelper.query_add_user(discord, city_name, postcode_id, stack)
         response = self.db.run_query(add_user_query, add_user_values)
         return response
 
@@ -35,15 +42,21 @@ class User:
         if zip_code:
             city_name = postcode_to_city(zip_code)
             city_id_query, city_id_values = QueryHelper.query_get_city_id(city_name)
-            city_exists = self.db.get_cell(city_id_query, city_id_values)
-            if not city_exists:
-                lat, lng = get_location_from_city(city_name)
-                add_city_query, add_city_values = QueryHelper.query_add_city(city_name, lat, lng)
-                self.db.run_query(add_city_query, add_city_values)
-
             city_id = self.db.get_cell(city_id_query, city_id_values)
+            if not city_id:
+                add_city_query, add_city_values = QueryHelper.query_add_city(city_name)
+                self.db.run_query(add_city_query, add_city_values)
+                city_id = self.db.get_cell(city_id_query, city_id_values)
+            postcode_query, postcode_values = QueryHelper.query_get_postcode(zip_code)
+            postcode_id = self.db.get_cell(postcode_query, postcode_values)
+            if not postcode_id:
+                lat, lng = get_location_from_postcode(zip_code)
+                add_postcode_query, add_postcode_values = QueryHelper.query_add_postcode(zip_code, city_id, lat, lng)
+                self.db.run_query(add_postcode_query, add_postcode_values)
+                postcode_id = self.db.get_cell(postcode_query, postcode_values)
             del kwargs["zip_code"]
             kwargs["city_id"] = city_id
+            kwargs["postcode_id"] = postcode_id
         update_user_query, update_user_values = QueryHelper.query_update_user(**kwargs)
         response = self.db.run_query(update_user_query, update_user_values)
         return response
@@ -52,3 +65,4 @@ class User:
         delete_query, delete_values = QueryHelper.query_delete_user(discord)
         response = self.db.run_query(delete_query, delete_values)
         return response
+
