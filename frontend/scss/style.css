@@ -333,7 +333,6 @@ main {
 
   .main {
     align-items: stretch;
-    padding-bottom: 20px;
     padding-top: 40px;
   }
   .section-form {
@@ -374,5 +373,3 @@ main {
     padding-right: 1em;
   }
 }
-
-/*# sourceMappingURL=style.css.map */

@@ -12,7 +12,6 @@
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDNiFB4QmLhSPq1fZWOdgI41vBBYeRhJbE&callback=initMap&v=weekly" defer></script>
     <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
     <script src="/frontend/js/form.js"></script>
-    <script type="text/javascript" src="/frontend/js/dummyData.json"></script>
     <script src="https://requirejs.org/docs/release/2.3.5/minified/require.js"></script>
   </head>
   <body>
@@ -76,9 +75,10 @@
               <label class="form__backend-label" for="backend">Backend</label>
             </div>
 
+            <div class="form formbox-two">
+              <input type="text" name="postal_code" value="Kod pocztowy..." onfocus="this.value=''" class="form__city-input" />
+            </div>
             <div class="form formbox-four">
-              <input type="text" name="postal_code" value="Kod pocztowy..." class="form__city-input" />
-
               <div class="personal__box">
                 <input type="checkbox" name="personal" id="checkbox" class="form__personal-input" />
                 <label class="form__personal-label" for="checkbox">Zgoda na przetwarzanie danych osobowych</label>

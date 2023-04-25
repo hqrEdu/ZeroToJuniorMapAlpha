@@ -3,7 +3,6 @@ function addMe(form) {
   let nick = form.discord.value;
   let postal_code = form.postal_code.value;
   let stack = form.radiobutt.value;
-
   console.log(nick, postal_code, stack);
 
   fetch("http://z2j.hqr.at/users", {
@@ -17,7 +16,6 @@ function addMe(form) {
   })
     .then((res) => {
       console.log(res);
-
       // console.log(res.body.getReader());
       return res.json();
     })
@@ -26,6 +24,11 @@ function addMe(form) {
       console.log(res.detail);
       if (res.detail !== undefined) {
         alert(res.detail);
+      } else {
+        console.log("wchodze tu");
+        setTimeout(() => {
+          form.submit();
+        }, "1000");
       }
     });
 }
