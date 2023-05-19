@@ -12,10 +12,10 @@ Web application exclusive for ZeroToJunior.dev community members (a place for de
 To tinker with this project (backend side), follow these steps:
 
 1. Clone this repository to your local machine.
-2. Install PostgreSQL and create an empty database.
+2. Install PostgreSQL.
 3. Install all dependencies from `/backend/requirements.txt`.
 4. Open `/backend/db_creator.py` and provide appropriate details (host, port, user, password) for the connection in the `__init__()` method.
-5. Create an instance of the `DatabaseCreator` class from the `/backend/db_creator.py` file and run the `.check_database()` method.
+5. Create an instance of the `DatabaseCreator` class from the `/backend/db_creator.py` file and run the `.get_proper_database()` method.
 6. Run `/backend/app.py` to start the application.
 7. Make HTTP requests (I recommend using the Postman API Platform).
 
