@@ -19,6 +19,10 @@ To tinker with this project (backend side), follow these steps:
 6. Run `/backend/app.py` to start the application.
 7. Make HTTP requests (I recommend using the Postman API Platform).
 
+## BACKEND CRUD REST API
+
+Here's a simple documentation for API with examples how to use it: [ZeroToJuniorMapAlpha API Docs](https://documenter.getpostman.com/view/27582869/2s93m4Y39P)
+
 ## Usage
 
 This project is exclusive for members of the ZeroToJunior.dev community. You can access the currently deployed version at the following address: [http://zero2junior.hqr.at/](http://zero2junior.hqr.at/)
